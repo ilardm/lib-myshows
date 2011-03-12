@@ -17,6 +17,8 @@ public class MyshowsAPI {
 	final protected String URL_API_EPISODES_UNWATCHED="http://api.myshows.ru/profile/episodes/unwatched/";
 	final protected String URL_API_EPISODES_NEXT="http://api.myshows.ru/profile/episodes/next/";
 	final protected String URL_API_EPISODES_SEEN="http://api.myshows.ru/profile/shows/%1$d/";
+	final protected String URL_API_EPISODE_CHECK="http://api.myshows.ru/profile/episodes/check/%1$d";
+	final protected String URL_API_EPISODE_CHECK_RATIO="http://api.myshows.ru/profile/episodes/check/%1$d?rating=%2$d";
 	
 	protected String user=null;
 	protected String password=null;
@@ -259,5 +261,59 @@ public class MyshowsAPI {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param _episode
+	 * @param _ratio if ( _ratio<0 ) { no ratio using }
+	 * @return true anyway :( except unauthorized
+	 */
+	public boolean checkEpisode(int _episode, int _ratio) {
+		
+		if ( httpClient==null || _episode<0 ) {
+			// debug
+			System.err.println("--- no httpClient || episode");
+			return false;
+		}
+		
+		String URLs=null;
+		if ( _ratio<0 || _ratio>5 ) {
+			URLs=String.format(URL_API_EPISODE_CHECK, _episode);
+		} else {
+			URLs=String.format(URL_API_EPISODE_CHECK_RATIO, _episode, _ratio); // TODO: check if ratio appears @ msh.ru 
+		}
+    			
+		try {
+			HttpGet request = new HttpGet(URLs);
+			
+			HttpResponse response = httpClient.execute(request);
+			
+			if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
+				request.abort();	// ~ close connection (?)
+				return true;
+			} else {
+				HttpEntity entity=response.getEntity();
+				if ( entity!=null ) {
+					BufferedReader inputStream = new BufferedReader(
+							new InputStreamReader( entity.getContent() )
+							);
+					String answer = "";
+					String line;
+					while ( (line = inputStream.readLine()) != null ) {
+						answer += (line + "\n");
+					}
+					request.abort();	// ~ close connection (?)
+					
+					System.out.println("answer: >>>\n" + answer + "<<<");
+				}
+			}
+			
+		} catch (Exception e) {
+			System.err.println("--- oops: "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 }
