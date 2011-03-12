@@ -12,7 +12,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 public class MyshowsAPI {
-	final protected String URL_API="http://api.myshows.ru/profile/";
+	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
+	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
 	
 	protected String user=null;
 	protected String password=null;
@@ -41,9 +42,12 @@ public class MyshowsAPI {
 			}
 			
 			password=hexString.toString();
+//			password="57da8c667d17b1b98b6c203cb1fc3d62";
 			
 			// debug
 			System.out.println("password: "+password);
+			
+			httpClient = new DefaultHttpClient();
 			
 		} catch (Exception e) {
 			System.err.println("--- oops: "+e.toString());
@@ -55,25 +59,25 @@ public class MyshowsAPI {
 	
 	public boolean login() {
 		
-		if ( password==null ) {
+		if ( httpClient==null ) {
 			// debug
 			System.err.println("--- password=null");
 			return false;
 		}
 		
-		String URLs=String.format(URL_API+"login?login=%1$s&password=%2$s", user, password);
+		String URLs=String.format(URL_API_LOGIN, user, password);
     	
 		try {
-			httpClient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(URLs);
+			HttpGet request = new HttpGet(URLs);
 			
-			HttpResponse responce = httpClient.execute(httpGet);
+			HttpResponse response = httpClient.execute(request);
+			request.abort();	// ~ close connection (?)
 			
 			// TODO: rewrite checking logged in (?)
-			if ( responce.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
+			if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
 				return true;
 			} else {
-				HttpEntity entity=responce.getEntity();
+				HttpEntity entity=response.getEntity();
 				if ( entity!=null ) {
 					BufferedReader inputStream = new BufferedReader(
 							new InputStreamReader( entity.getContent() )
@@ -93,5 +97,44 @@ public class MyshowsAPI {
 		}
 		
 		return false;
+	}
+	
+	public String getShows() {
+		if ( httpClient==null ) {
+			return null;
+		}
+		
+		try {
+			HttpGet request=new HttpGet(URL_API_SHOWS);
+			
+			HttpResponse response=httpClient.execute(request);
+			request.abort();	// ~ close connection (?)
+			
+			HttpEntity entity=response.getEntity();
+			if ( entity!=null ) {
+				BufferedReader inputStream = new BufferedReader(
+						new InputStreamReader( entity.getContent() )
+						);
+				String answer = "";
+				String line;
+				while ( (line = inputStream.readLine()) != null ) {
+					answer += (line + "\n");
+				}
+				
+				// debug
+				System.out.println("answer: >>>\n" + answer + "<<<");
+				
+				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
+					return answer;
+				} else {
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("--- oops: "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }
