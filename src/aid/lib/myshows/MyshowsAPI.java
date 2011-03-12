@@ -14,6 +14,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 public class MyshowsAPI {
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
+	final protected String URL_API_EPISODES_UNWATCHED="http://api.myshows.ru/profile/episodes/unwatched/";
+	final protected String URL_API_EPISODES_NEXT="http://api.myshows.ru/profile/episodes/next/";
+	final protected String URL_API_EPISODES_SEEN="http://api.myshows.ru/profile/shows/%1$d/";
 	
 	protected String user=null;
 	protected String password=null;
@@ -71,10 +74,10 @@ public class MyshowsAPI {
 			HttpGet request = new HttpGet(URLs);
 			
 			HttpResponse response = httpClient.execute(request);
-			request.abort();	// ~ close connection (?)
 			
 			// TODO: rewrite checking logged in (?)
 			if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
+				request.abort();	// ~ close connection (?)
 				return true;
 			} else {
 				HttpEntity entity=response.getEntity();
@@ -87,6 +90,8 @@ public class MyshowsAPI {
 					while ( (line = inputStream.readLine()) != null ) {
 						answer += (line + "\n");
 					}
+					request.abort();	// ~ close connection (?)
+					
 					System.out.println("answer: >>>\n" + answer + "<<<");
 				}
 			}
@@ -108,7 +113,6 @@ public class MyshowsAPI {
 			HttpGet request=new HttpGet(URL_API_SHOWS);
 			
 			HttpResponse response=httpClient.execute(request);
-			request.abort();	// ~ close connection (?)
 			
 			HttpEntity entity=response.getEntity();
 			if ( entity!=null ) {
@@ -120,6 +124,125 @@ public class MyshowsAPI {
 				while ( (line = inputStream.readLine()) != null ) {
 					answer += (line + "\n");
 				}
+				request.abort();	// ~ close connection (?)
+				
+				// debug
+				System.out.println("answer: >>>\n" + answer + "<<<");
+				
+				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
+					return answer;
+				} else {
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("--- oops: "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public String getUnwatchedEpisodes() {
+		if ( httpClient==null ) {
+			return null;
+		}
+		
+		try {
+			HttpGet request=new HttpGet(URL_API_EPISODES_UNWATCHED);
+			
+			HttpResponse response=httpClient.execute(request);
+			
+			HttpEntity entity=response.getEntity();
+			if ( entity!=null ) {
+				BufferedReader inputStream = new BufferedReader(
+						new InputStreamReader( entity.getContent() )
+						);
+				String answer = "";
+				String line;
+				while ( (line = inputStream.readLine()) != null ) {
+					answer += (line + "\n");
+				}
+				request.abort();	// ~ close connection (?)
+				
+				// debug
+				System.out.println("answer: >>>\n" + answer + "<<<");
+				
+				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
+					return answer;
+				} else {
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("--- oops: "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public String getNextEpisodes() {
+		if ( httpClient==null ) {
+			return null;
+		}
+		
+		try {
+			HttpGet request=new HttpGet(URL_API_EPISODES_NEXT);
+			
+			HttpResponse response=httpClient.execute(request);
+			
+			HttpEntity entity=response.getEntity();
+			if ( entity!=null ) {
+				BufferedReader inputStream = new BufferedReader(
+						new InputStreamReader( entity.getContent() )
+						);
+				String answer = "";
+				String line;
+				while ( (line = inputStream.readLine()) != null ) {
+					answer += (line + "\n");
+				}
+				request.abort();	// ~ close connection (?)
+				
+				// debug
+				System.out.println("answer: >>>\n" + answer + "<<<");
+				
+				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
+					return answer;
+				} else {
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("--- oops: "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public String getSeenEpisodes(int _show) {
+		if ( httpClient==null || _show<0 ) {
+			return null;
+		}
+		
+		try {
+			String URLs=String.format(URL_API_EPISODES_SEEN, _show);
+			HttpGet request=new HttpGet(URLs);
+			
+			HttpResponse response=httpClient.execute(request);
+			
+			HttpEntity entity=response.getEntity();
+			if ( entity!=null ) {
+				BufferedReader inputStream = new BufferedReader(
+						new InputStreamReader( entity.getContent() )
+						);
+				String answer = "";
+				String line;
+				while ( (line = inputStream.readLine()) != null ) {
+					answer += (line + "\n");
+				}
+				request.abort();	// ~ close connection (?)
 				
 				// debug
 				System.out.println("answer: >>>\n" + answer + "<<<");
