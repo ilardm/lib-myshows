@@ -19,6 +19,7 @@ public class MyshowsAPI {
 	final protected String URL_API_EPISODES_SEEN="http://api.myshows.ru/profile/shows/%1$d/";
 	final protected String URL_API_EPISODE_CHECK="http://api.myshows.ru/profile/episodes/check/%1$d";
 	final protected String URL_API_EPISODE_CHECK_RATIO="http://api.myshows.ru/profile/episodes/check/%1$d?rating=%2$d";
+	final protected String URL_API_EPISODE_UNCHECK="http://api.myshows.ru/profile/episodes/uncheck/%1$d";
 	
 	protected String user=null;
 	protected String password=null;
@@ -262,6 +263,10 @@ public class MyshowsAPI {
 		
 		return null;
 	}
+
+	public boolean checkEpisode(int _episode) {
+		return checkEpisode(_episode, -1);
+	}
 	
 	/**
 	 * 
@@ -286,6 +291,47 @@ public class MyshowsAPI {
     			
 		try {
 			HttpGet request = new HttpGet(URLs);
+			
+			HttpResponse response = httpClient.execute(request);
+			
+			if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
+				request.abort();	// ~ close connection (?)
+				return true;
+			} else {
+				HttpEntity entity=response.getEntity();
+				if ( entity!=null ) {
+					BufferedReader inputStream = new BufferedReader(
+							new InputStreamReader( entity.getContent() )
+							);
+					String answer = "";
+					String line;
+					while ( (line = inputStream.readLine()) != null ) {
+						answer += (line + "\n");
+					}
+					request.abort();	// ~ close connection (?)
+					
+					System.out.println("answer: >>>\n" + answer + "<<<");
+				}
+			}
+			
+		} catch (Exception e) {
+			System.err.println("--- oops: "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
+	public boolean unCheckEpisode(int _episode) {
+		
+		if ( httpClient==null || _episode<0 ) {
+			// debug
+			System.err.println("--- no httpClient || episode");
+			return false;
+		}
+
+		try {
+			HttpGet request = new HttpGet( String.format(URL_API_EPISODE_UNCHECK, _episode) );
 			
 			HttpResponse response = httpClient.execute(request);
 			
