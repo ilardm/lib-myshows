@@ -16,13 +16,13 @@
 
   <!-- versioning -->
   <property name="author.info" value="Ilya Arefiev (arefiev.id@gmail.com)" />
-  <property name="version.num" value="0.1" />
+  <property name="version.num" value="0.0" />
   <buildnumber file=".build.num" />
   <tstamp>
 	<format property="TODAY" pattern="yyyyMMdd:HHmmss" />
 	<format property="TODAY.YEAR" pattern="yyyy" />
   </tstamp>
-  <property name="version.impl" value="${version.num}.${build.number} ${TODAY}" />
+  <property name="version.impl" value="${build.number}"/>
 
   <!-- release destination -->
   <property name="release.dir" value="${ant.project.name}-${version.num}" />
