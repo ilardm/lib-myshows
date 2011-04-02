@@ -59,7 +59,18 @@ public class MyshowsAPI {
 	
 	protected HttpClient httpClient=null;
 	
-	protected MyshowsAPI(String _user, String _password) {
+	protected MyshowsAPI() {
+		httpClient = new DefaultHttpClient();
+	}
+	
+	protected boolean login(String _user, String _password) {
+		
+		if ( httpClient==null ) {
+			System.err.println("--- httpClient=null");
+			
+			return false;
+		}
+		
 		user=_user;
 		
 		// get md5 hash of password
@@ -86,23 +97,16 @@ public class MyshowsAPI {
 			// debug
 			System.out.println("password: "+password);
 			
-			httpClient = new DefaultHttpClient();
-			
 		} catch (Exception e) {
 			System.err.println("--- oops: "+e.toString());
 			e.printStackTrace();
 			
 			password=null;
-		}
-	}
-	
-	protected boolean login() {
-		
-		if ( httpClient==null ) {
-			// debug
-			System.err.println("--- password=null");
+
 			return false;
 		}
+		
+		//----------------------
 		
 		String URLs=String.format(URL_API_LOGIN, user, password);
     	
