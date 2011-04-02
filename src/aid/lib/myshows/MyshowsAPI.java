@@ -59,7 +59,18 @@ public class MyshowsAPI {
 	
 	protected HttpClient httpClient=null;
 	
-	public MyshowsAPI(String _user, String _password) {
+	protected MyshowsAPI() {
+		httpClient = new DefaultHttpClient();
+	}
+	
+	protected boolean login(String _user, String _password) {
+		
+		if ( httpClient==null ) {
+			System.err.println("--- httpClient=null");
+			
+			return false;
+		}
+		
 		user=_user;
 		
 		// get md5 hash of password
@@ -86,23 +97,16 @@ public class MyshowsAPI {
 			// debug
 			System.out.println("password: "+password);
 			
-			httpClient = new DefaultHttpClient();
-			
 		} catch (Exception e) {
 			System.err.println("--- oops: "+e.toString());
 			e.printStackTrace();
 			
 			password=null;
-		}
-	}
-	
-	public boolean login() {
-		
-		if ( httpClient==null ) {
-			// debug
-			System.err.println("--- password=null");
+			
 			return false;
 		}
+		
+		//----------------------
 		
 		String URLs=String.format(URL_API_LOGIN, user, password);
     	
@@ -140,7 +144,7 @@ public class MyshowsAPI {
 		return false;
 	}
 	
-	public String getShows() {
+	protected String getShows() {
 		if ( httpClient==null ) {
 			return null;
 		}
@@ -179,7 +183,7 @@ public class MyshowsAPI {
 		return null;
 	}
 	
-	public String getUnwatchedEpisodes() {
+	protected String getUnwatchedEpisodes() {
 		if ( httpClient==null ) {
 			return null;
 		}
@@ -218,7 +222,7 @@ public class MyshowsAPI {
 		return null;
 	}
 	
-	public String getNextEpisodes() {
+	protected String getNextEpisodes() {
 		if ( httpClient==null ) {
 			return null;
 		}
@@ -257,7 +261,7 @@ public class MyshowsAPI {
 		return null;
 	}
 	
-	public String getSeenEpisodes(int _show) {
+	protected String getSeenEpisodes(int _show) {
 		if ( httpClient==null || _show<0 ) {
 			return null;
 		}
@@ -297,7 +301,7 @@ public class MyshowsAPI {
 		return null;
 	}
 
-	public boolean checkEpisode(int _episode) {
+	protected boolean checkEpisode(int _episode) {
 		return checkEpisode(_episode, -1);
 	}
 	
@@ -307,7 +311,7 @@ public class MyshowsAPI {
 	 * @param _ratio if ( _ratio<0 ) { no ratio using }
 	 * @return true anyway :( except unauthorized
 	 */
-	public boolean checkEpisode(int _episode, int _ratio) {
+	protected boolean checkEpisode(int _episode, int _ratio) {
 		
 		if ( httpClient==null || _episode<0 ) {
 			// debug
@@ -355,7 +359,7 @@ public class MyshowsAPI {
 		return false;
 	}
 
-	public boolean unCheckEpisode(int _episode) {
+	protected boolean unCheckEpisode(int _episode) {
 		
 		if ( httpClient==null || _episode<0 ) {
 			// debug
