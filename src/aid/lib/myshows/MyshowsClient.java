@@ -91,12 +91,12 @@ public class MyshowsClient {
   {
     "rating": 0,
     "ruTitle": "$translated_title",
-    "runtime": 43,	// TODO
+    "runtime": $episode_duration,
     "showId": $showId,
-    "showStatus": "Returning Series", // TODO: variants
+    "showStatus": "$show_status", // Canceled/Ended || Returning Series
     "title": "$original_title",
     "totalEpisodes": $num_of_totlat_episodes,
-    "watchStatus": "$user's_watching_status",	// TODO: variants 
+    "watchStatus": "$user's_watching_status",	// watching || cancelled
     "watchedEpisodes": $num_of_watched_episodes
   }
 ]
