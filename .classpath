@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/org-json.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/lib-myshows/libs/org-json.jar!/doc"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/lib-myshows/libs/org-json-0.0-doc.zip!/org-json-0.0-doc"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/httpclient-4.0.1.jar"/>

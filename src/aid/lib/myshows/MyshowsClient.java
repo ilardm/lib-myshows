@@ -30,47 +30,214 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package aid.lib.myshows;
 
+import java.util.Iterator;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 /**
  * 
- * @author Ilya Arefiev <arefiev.id@gmail.com>
+ * @author Ilya Arefiev (arefiev.id@gmail.com)
  *
  */
 public class MyshowsClient {
 	protected MyshowsAPI api=null;
 	
-	public MyshowsClient(String _username, String _password) {
-		api=new MyshowsAPI(_username, _password);
+	public MyshowsClient() {
+		api=new MyshowsAPI();
+		
+		System.out.println("+++ MyshowsClient()");
+		
+		// TODO: check if offline
 	}
 	
-	public boolean login() {
-		return api.login();
+	public boolean login(String _username, String _password) {
+		System.out.println("+++ login(String "+_username+", String "+_password+")");
+		
+		return api.login(_username, _password);
 	}
 	
-	public String getShows() {
-		return api.getShows();
+	public boolean logout() {
+		System.out.println("+++ logout()");
+		
+		return false;
 	}
 	
-	public String getUnwatchedEpisodes() {
-		return api.getUnwatchedEpisodes();
+	public JSONArray getShows() {
+		System.out.println("+++ getShows()");
+		
+		JSONObject shows=null;
+		JSONArray ret=null;
+		String result=api.getShows();
+		
+		if ( result!=null ) {
+			try {
+				// put shows in jsonobject{ "showid":{"info"} }
+				shows=new JSONObject(result);
+				
+				System.out.println(shows.toString(2));
+				// get all "showid"
+				Iterator<String> iter = shows.keys();
+				
+				ret=new JSONArray();
+				
+				// add info into jsonarray
+				while ( iter.hasNext() ) {
+					ret.put(
+							shows.getJSONObject( iter.next() )
+							);
+				}
+				
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- null from API call");
+		}
+		
+		return ret;
 	}
 	
-	public String getNextEpisodes() {
-		return api.getNextEpisodes();
+	public JSONArray getUnwatchedEpisodes(int _show) {
+		System.out.println("+++ getUnwatchedEpisodes("+_show+")");
+		
+		JSONObject unwatched=null;
+		JSONArray ret=null;
+		String result=api.getUnwatchedEpisodes();
+		
+		if ( result!=null ) {
+			try {
+				// put episodes in jsonobject{ "showid":{"info"} }
+				unwatched=new JSONObject(result);
+				
+				System.out.println(unwatched.toString(2));
+				// get all "showid"
+				Iterator<String> iter = unwatched.keys();
+				
+				ret=new JSONArray();
+				
+				JSONObject episode=null;
+				
+				// add info into jsonarray
+				while ( iter.hasNext() ) {
+					episode=unwatched.getJSONObject( iter.next() );
+					
+					// filter by _show if exists
+					if ( _show>0 && episode.getInt("showId")==_show ) {
+						ret.put( episode );
+					} else if ( _show<0 ) {
+						ret.put( episode );
+					}
+				}
+				
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- null from API call");
+		}
+		
+		return ret;
 	}
 	
-	public String getSeenEpisodes(int _show) {
-		return api.getSeenEpisodes(_show);
+	public JSONArray getNextEpisodes(int _show) {
+		System.out.println("+++ getNextEpisodes("+_show+")");
+		
+		JSONObject next=null;
+		JSONArray ret=null;
+		String result=api.getNextEpisodes();
+		
+		if ( result!=null ) {
+			try {
+				// put episodes in jsonobject{ "showid":{"info"} }
+				next=new JSONObject(result);
+				
+				System.out.println(next.toString(2));
+				// get all "showid"
+				Iterator<String> iter = next.keys();
+				
+				ret=new JSONArray();
+				
+				JSONObject episode=null;
+				
+				// add info into jsonarray
+				while ( iter.hasNext() ) {
+					episode=next.getJSONObject( iter.next() );
+					
+					// filter by _show if exists
+					if ( _show>0 && episode.getInt("showId")==_show ) {
+						ret.put( episode );
+					} else if ( _show<0 ) {
+						ret.put( episode );
+					} else {
+						continue;
+					}
+				}
+				
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- null from API call");
+		}
+		
+		return ret;
+	}
+	
+	public JSONArray getSeenEpisodes(int _show) {
+		System.out.println("+++ getSeenEpisodes(int "+_show+")");
+		
+		JSONObject seen=null;
+		JSONArray ret=null;
+		String result=api.getSeenEpisodes(_show);
+		
+		if ( result!=null ) {
+			try {
+				// put episodes in jsonobject{ "showid":{"info"} }
+				seen=new JSONObject(result);
+				
+				System.out.println(seen.toString(2));
+				// get all "showid"
+				Iterator<String> iter = seen.keys();
+				
+				ret=new JSONArray();
+				
+				// add info into jsonarray
+				while ( iter.hasNext() ) {
+					ret.put(
+							seen.getJSONObject( iter.next() )
+							);
+				}
+				
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- null from API call");
+		}
+		
+		return ret;
 	}
 	
 	public boolean checkEpisode(int _episode) {
+		System.out.println("+++ checkEpisode(int "+_episode+")");
+		
 		return api.checkEpisode(_episode);
 	}
 	
 	public boolean checkEpisode(int _episode, int _ratio) {
+		System.out.println("+++ checkEpisode(int "+_episode+", int "+_ratio+")");
+		
 		return api.checkEpisode(_episode, _ratio);
 	}
 	
 	public boolean unCheckEpisode(int _episode) {
+		System.out.println("+++ unCheckEpisode(int "+_episode+")");
+		
 		return api.unCheckEpisode(_episode);
 	}
 }

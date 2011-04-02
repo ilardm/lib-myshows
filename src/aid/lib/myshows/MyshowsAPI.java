@@ -42,7 +42,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 /** 
- * @author Ilya Arefiev <arefiev.id@gmail.com>
+ * @author Ilya Arefiev (arefiev.id@gmail.com)
  */
 public class MyshowsAPI {
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
