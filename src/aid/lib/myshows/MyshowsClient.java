@@ -149,7 +149,7 @@ public class MyshowsClient {
 		<pre>[
   {
     "airDate": "$dd.mm.yyyy",
-    "episodeId": $episode_id,
+    "episodeId": $episodeId,
     "episodeNumber": $episode_number,
     "seasonNumber": $season_number,
     "showId": $showId,
@@ -213,9 +213,9 @@ public class MyshowsClient {
 	 * <code>_show</code> (if <code>_show</code>>0)<br>
 	 * {@link JSONArray} format:
 		<pre>[
-  "$episode_id": {
+  {
     "airDate": "$dd.mm.yyyy",
-    "episodeId": $episode_id,
+    "episodeId": $episodeId,
     "episodeNumber": $episode_number,
     "seasonNumber": $season_number,
     "showId": $showId,
@@ -277,13 +277,9 @@ public class MyshowsClient {
 	 * calls <code>MyshowsAPI.getSeenEpisodes()</code><br>
 	 * {@link JSONArray} format:
 		<pre>[
-  "$episode_id": {
-    "airDate": "$dd.mm.yyyy",
-    "episodeId": $episode_id,
-    "episodeNumber": $episode_number,
-    "seasonNumber": $season_number,
-    "showId": $showId,
-    "title": "$original_episode_title"
+  {
+    "id": $episodeId,
+    "watchDate": "$dd.mm.yyyy"
   }
 ]
 		</pre>
@@ -330,7 +326,7 @@ public class MyshowsClient {
 	/**
 	 * mark episode as watched<br>
 	 * calls <code>MyshowsAPI.checkEpisode(_episode)</code><br>
-	 * @param _episode $episode_id
+	 * @param _episode $episodeId
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
@@ -344,7 +340,7 @@ public class MyshowsClient {
 	/**
 	 * mark episode as watched with ratio<br>
 	 * calls <code>MyshowsAPI.checkEpisode(_episode, _ratio)</code>
-	 * @param _episode $episode_id
+	 * @param _episode $episodeId
 	 * @param _ratio $ratio // <b>currently useless</b>
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
@@ -358,7 +354,7 @@ public class MyshowsClient {
 	/**
 	 * mark episode as unwatched<br>
 	 * calls <code>MyshowsAPI.unCheckEpisode(_episode)</code>
-	 * @param _episode $episode_id
+	 * @param _episode $episodeId
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */

@@ -230,9 +230,9 @@ public class MyshowsAPI {
 	 * get all unwatched episodes of all user's shows<br>
 	 * <code>JSON string</code> format:
 		<pre>{
-  "$episode_id": {
+  "$episodeId": {
     "airDate": "$dd.mm.yyyy",
-    "episodeId": $episode_id,
+    "episodeId": $episodeId,
     "episodeNumber": $episode_number,
     "seasonNumber": $season_number,
     "showId": $showId,
@@ -286,9 +286,9 @@ public class MyshowsAPI {
 	 * get next (future) episodes of all user's shows<br>
 	 * <code>JSON string</code> format:
 		<pre>{
-  "$episode_id": {
+  "$episodeId": {
     "airDate": "$dd.mm.yyyy",
-    "episodeId": $episode_id,
+    "episodeId": $episodeId,
     "episodeNumber": $episode_number,
     "seasonNumber": $season_number,
     "showId": $showId,
@@ -342,8 +342,8 @@ public class MyshowsAPI {
 	 * get seen episodes of user's show (given by <code>_show</code>)<br>
 	 * <code>JSON string</code> format:
 		<pre>{
-  "$episode_id": {
-    "id": $episode_id,
+  "$episodeId": {
+    "id": $episodeId,
     "watchDate": "$dd.mm.yyyy"
   }
 }
@@ -395,7 +395,7 @@ public class MyshowsAPI {
 	/**
 	 * mark episode as watched<br>
 	 * actually calls <code>checkEpisode(int _episode, -1)</code>
-	 * @param _episode $episode_id
+	 * @param _episode $episodeId
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
@@ -405,7 +405,7 @@ public class MyshowsAPI {
 	
 	/**
 	 * mark episode as watched with ratio<br>
-	 * @param _episode $episode_id
+	 * @param _episode $episodeId
 	 * @param _ratio if ( _ratio<0 ) { no ratio for http call using }
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
@@ -460,7 +460,7 @@ public class MyshowsAPI {
 
 	/**
 	 * mark episode as unwatched
-	 * @param _episode $episode_id
+	 * @param _episode $episodeId
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
