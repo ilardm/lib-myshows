@@ -90,9 +90,14 @@ public class MyshowsAPI {
 	protected boolean login(String _user, String _password) {
 		
 		if ( httpClient==null ) {
-			System.err.println("--- httpClient=null");
+			System.err.println("--- httpClient=null. create new");
 			
-			return false;
+			httpClient=new DefaultHttpClient();
+			
+			if ( httpClient==null ) {
+				System.err.println("--- httpClient=null again");
+				return false;
+			}
 		}
 		
 		user=_user;
@@ -118,7 +123,7 @@ public class MyshowsAPI {
 			password=hexString.toString();
 			
 			// debug
-			System.out.println("password: "+password);
+//			System.out.println("password: "+password);
 			
 		} catch (Exception e) {
 			System.err.println("--- oops: "+e.toString());
@@ -151,7 +156,7 @@ public class MyshowsAPI {
 					String answer = "";
 					String line;
 					while ( (line = inputStream.readLine()) != null ) {
-						answer += (line + "\n");
+						answer += (line + "\n");	// TODO: use stringbuffer instead
 					}
 					request.abort();	// ~ close connection (?)
 					
@@ -165,6 +170,20 @@ public class MyshowsAPI {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * <b>currently</b> drops httpclient
+	 * @return currently <b><code>true</code></b>
+	 */
+	protected boolean logout() {
+		user="";
+		password="";
+		
+		// TODO: temporary workaround. rewrite api's logout (without new httpclient) if possible
+		httpClient=null;
+		
+		return true;
 	}
 	
 	/**
@@ -205,12 +224,12 @@ public class MyshowsAPI {
 				String answer = "";
 				String line;
 				while ( (line = inputStream.readLine()) != null ) {
-					answer += (line + "\n");
+					answer += (line + "\n");	// TODO: use stringbuffer instead
 				}
 				request.abort();	// ~ close connection (?)
 				
 				// debug
-				System.out.println("answer: >>>\n" + answer + "<<<");
+//				System.out.println("answer: >>>\n" + answer + "<<<");
 				
 				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
 					return answer;
@@ -261,12 +280,12 @@ public class MyshowsAPI {
 				String answer = "";
 				String line;
 				while ( (line = inputStream.readLine()) != null ) {
-					answer += (line + "\n");
+					answer += (line + "\n");	// TODO: use stringbuffer instead
 				}
 				request.abort();	// ~ close connection (?)
 				
 				// debug
-				System.out.println("answer: >>>\n" + answer + "<<<");
+//				System.out.println("answer: >>>\n" + answer + "<<<");
 				
 				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
 					return answer;
@@ -317,12 +336,12 @@ public class MyshowsAPI {
 				String answer = "";
 				String line;
 				while ( (line = inputStream.readLine()) != null ) {
-					answer += (line + "\n");
+					answer += (line + "\n");	// TODO: use stringbuffer instead
 				}
 				request.abort();	// ~ close connection (?)
 				
 				// debug
-				System.out.println("answer: >>>\n" + answer + "<<<");
+//				System.out.println("answer: >>>\n" + answer + "<<<");
 				
 				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
 					return answer;
@@ -371,12 +390,12 @@ public class MyshowsAPI {
 				String answer = "";
 				String line;
 				while ( (line = inputStream.readLine()) != null ) {
-					answer += (line + "\n");
+					answer += (line + "\n");	// TODO: use stringbuffer instead
 				}
 				request.abort();	// ~ close connection (?)
 				
 				// debug
-				System.out.println("answer: >>>\n" + answer + "<<<");
+//				System.out.println("answer: >>>\n" + answer + "<<<");
 				
 				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
 					return answer;
@@ -442,7 +461,7 @@ public class MyshowsAPI {
 					String answer = "";
 					String line;
 					while ( (line = inputStream.readLine()) != null ) {
-						answer += (line + "\n");
+						answer += (line + "\n");	// TODO: use stringbuffer instead
 					}
 					request.abort();	// ~ close connection (?)
 					
@@ -489,7 +508,7 @@ public class MyshowsAPI {
 					String answer = "";
 					String line;
 					while ( (line = inputStream.readLine()) != null ) {
-						answer += (line + "\n");
+						answer += (line + "\n");	// TODO: use stringbuffer instead
 					}
 					request.abort();	// ~ close connection (?)
 					
