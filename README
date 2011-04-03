@@ -1,0 +1,33 @@
+@author Ilya Arefiev (arefiev.id@gmail.com)
+
+This is a java implementation of http://api.myshows.ru/ represented as a library
+Read docs for MyshowsClient to know how to use library.
+
+=== BUILDING ===
+
+Run
+    ant release
+to build library and documentation, placed in "lib-myshows-$version".
+"lib-myshows-$version" directory also contains all necessary libraries required
+to work properly
+
+Current implementation of library(in case you have only .jar file) may be found
+in .jar file "META_INF/MANIFEST.MF"
+
+Run
+    ant jar
+to build just .jar, placed in "build/jar"
+
+=== REQUIREMENTS ===
+
+Requires
+    commons-logging-1.1.1.jar
+    httpclient-4.0.1.jar
+    httpcore-4.0.1.jar
+    org-json.jar
+placed near assembled .jar file to work properly
+
+=== LICENSE ===
+
+Licensed under modified BSD license. Copy of license may be found in LICENSE
+file (.jar file also contains LICENSE).
