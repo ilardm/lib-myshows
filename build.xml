@@ -12,11 +12,11 @@
   <property name="jar.dir" value="${build.dir}/jar" />
 
   <!-- executable class -->
-  <property name="main-class" value="Main" />
+  <!-- <property name="main-class" value="Main" /> -->
 
   <!-- versioning -->
   <property name="author.info" value="Ilya Arefiev (arefiev.id@gmail.com)" />
-  <property name="version.num" value="0.0" />
+  <property name="version.num" value="0.1" />
   <buildnumber file=".build.num" />
   <tstamp>
 	<format property="TODAY" pattern="yyyyMMdd:HHmmss" />
@@ -52,7 +52,7 @@
 	<jar destfile="${jar.dir}/${ant.project.name}.jar">
 	  <manifest>
 		<!-- is jar executable? -->
-		<attribute name="Main-Class" value="${main-class}" />
+		<!-- <attribute name="Main-Class" value="${main-class}" /> -->
 		
 		<!-- list here all *.jar libraries -->
 		<attribute name="Class-Path" value=". commons-logging-1.1.1.jar httpclient-4.0.1.jar httpcore-4.0.1.jar org-json.jar" />

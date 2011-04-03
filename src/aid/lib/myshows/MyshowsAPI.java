@@ -42,7 +42,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 /** 
- * @author Ilya Arefiev <arefiev.id@gmail.com>
+ * MyShows API
+ * @see <a href="http://api.myshows.ru/">http://api.myshows.ru/</a>
+ * @author Ilya Arefiev (arefiev.id@gmail.com)
  */
 public class MyshowsAPI {
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
@@ -54,15 +56,37 @@ public class MyshowsAPI {
 	final protected String URL_API_EPISODE_CHECK_RATIO="http://api.myshows.ru/profile/episodes/check/%1$d?rating=%2$d";
 	final protected String URL_API_EPISODE_UNCHECK="http://api.myshows.ru/profile/episodes/uncheck/%1$d";
 	
+	/**
+	 * registered username
+	 */
 	protected String user=null;
+	
+	/**
+	 * username's password
+	 */
 	protected String password=null;
 	
+	/**
+	 * main http client<br>
+	 * unique for whole session because of auth cookies
+	 */
 	protected HttpClient httpClient=null;
 	
+	/**
+	 * dummy constructor<br>
+	 * just creates {@link HttpClient}
+	 */
 	protected MyshowsAPI() {
 		httpClient = new DefaultHttpClient();
 	}
 	
+	/**
+	 * login into <code>username</code>'s account
+	 * @param _user username
+	 * @param _password password of username
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise 
+	 */
 	protected boolean login(String _user, String _password) {
 		
 		if ( httpClient==null ) {
@@ -92,7 +116,6 @@ public class MyshowsAPI {
 			}
 			
 			password=hexString.toString();
-//			password="57da8c667d17b1b98b6c203cb1fc3d62";
 			
 			// debug
 			System.out.println("password: "+password);
@@ -102,7 +125,7 @@ public class MyshowsAPI {
 			e.printStackTrace();
 			
 			password=null;
-			
+
 			return false;
 		}
 		
@@ -144,6 +167,26 @@ public class MyshowsAPI {
 		return false;
 	}
 	
+	/**
+	 * get all shows (watching, canceled, etc) of user<br>
+	 * <code>JSON string</code> format:
+		<pre>{
+  "$showId": {
+    "rating": 0,
+    "ruTitle": "$translated_title",
+    "runtime": $episode_duration,
+    "showId": $showId,
+    "showStatus": "$show_status", // Canceled/Ended || Returning Series
+    "title": "$original_title",
+    "totalEpisodes": $num_of_totlat_episodes,
+    "watchStatus": "$user's_watching_status",	// watching || cancelled 
+    "watchedEpisodes": $num_of_watched_episodes
+  }
+}
+		</pre>
+	 * @return <code>JSON string<code> with shows if success<br>
+	 * 			<code>null</code> otherwise
+	 */
 	protected String getShows() {
 		if ( httpClient==null ) {
 			return null;
@@ -183,6 +226,23 @@ public class MyshowsAPI {
 		return null;
 	}
 	
+	/**
+	 * get all unwatched episodes of all user's shows<br>
+	 * <code>JSON string</code> format:
+		<pre>{
+  "$episodeId": {
+    "airDate": "$dd.mm.yyyy",
+    "episodeId": $episodeId,
+    "episodeNumber": $episode_number,
+    "seasonNumber": $season_number,
+    "showId": $showId,
+    "title": "$original_episode_title"
+  }
+}
+		</pre>
+	 * @return <code>JSON string<code> with episodes if success<br>
+	 * 			<code>null</code> otherwise
+	 */
 	protected String getUnwatchedEpisodes() {
 		if ( httpClient==null ) {
 			return null;
@@ -222,6 +282,23 @@ public class MyshowsAPI {
 		return null;
 	}
 	
+	/**
+	 * get next (future) episodes of all user's shows<br>
+	 * <code>JSON string</code> format:
+		<pre>{
+  "$episodeId": {
+    "airDate": "$dd.mm.yyyy",
+    "episodeId": $episodeId,
+    "episodeNumber": $episode_number,
+    "seasonNumber": $season_number,
+    "showId": $showId,
+    "title": "$original_episode_title"
+  }
+}
+		</pre>
+	 * @return <code>JSON string<code> with episodes if success<br>
+	 * 			<code>null</code> otherwise
+	 */
 	protected String getNextEpisodes() {
 		if ( httpClient==null ) {
 			return null;
@@ -261,6 +338,20 @@ public class MyshowsAPI {
 		return null;
 	}
 	
+	/**
+	 * get seen episodes of user's show (given by <code>_show</code>)<br>
+	 * <code>JSON string</code> format:
+		<pre>{
+  "$episodeId": {
+    "id": $episodeId,
+    "watchDate": "$dd.mm.yyyy"
+  }
+}
+		</pre>
+	 * @param _show $showId
+	 * @return <code>JSON string<code> with episodes if success<br>
+	 * 			<code>null</code> otherwise
+	 */
 	protected String getSeenEpisodes(int _show) {
 		if ( httpClient==null || _show<0 ) {
 			return null;
@@ -301,15 +392,23 @@ public class MyshowsAPI {
 		return null;
 	}
 
+	/**
+	 * mark episode as watched<br>
+	 * actually calls <code>checkEpisode(int _episode, -1)</code>
+	 * @param _episode $episodeId
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise (likely unauthorized)
+	 */
 	protected boolean checkEpisode(int _episode) {
 		return checkEpisode(_episode, -1);
 	}
 	
 	/**
-	 * 
-	 * @param _episode
-	 * @param _ratio if ( _ratio<0 ) { no ratio using }
-	 * @return true anyway :( except unauthorized
+	 * mark episode as watched with ratio<br>
+	 * @param _episode $episodeId
+	 * @param _ratio if ( _ratio<0 ) { no ratio for http call using }
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
 	protected boolean checkEpisode(int _episode, int _ratio) {
 		
@@ -323,7 +422,7 @@ public class MyshowsAPI {
 		if ( _ratio<0 || _ratio>5 ) {
 			URLs=String.format(URL_API_EPISODE_CHECK, _episode);
 		} else {
-			URLs=String.format(URL_API_EPISODE_CHECK_RATIO, _episode, _ratio); // TODO: check if ratio appears @ msh.ru 
+			URLs=String.format(URL_API_EPISODE_CHECK_RATIO, _episode, _ratio); // TODO: check if ratio appears @ msh web
 		}
     			
 		try {
@@ -359,6 +458,12 @@ public class MyshowsAPI {
 		return false;
 	}
 
+	/**
+	 * mark episode as unwatched
+	 * @param _episode $episodeId
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise (likely unauthorized)
+	 */
 	protected boolean unCheckEpisode(int _episode) {
 		
 		if ( httpClient==null || _episode<0 ) {
