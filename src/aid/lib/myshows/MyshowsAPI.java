@@ -81,6 +81,58 @@ public class MyshowsAPI {
 	}
 	
 	/**
+	 * common function to execute {@link HttpGet} requests<br>
+	 * @param _request request to execute
+	 * @return {@link String} with response if success<br>
+	 * 			<code>null</code> otherwise
+	 */
+	private String executeRequest(HttpGet _request) {
+		
+		if ( httpClient==null || _request==null ) {
+			System.err.println("--- httpClient || _request = null");
+			
+			return null;
+		}
+		
+		try {
+			HttpResponse response=httpClient.execute(_request);
+			
+			HttpEntity entity=response.getEntity();
+			if ( entity!=null ) {
+				
+				BufferedReader inputStream = new BufferedReader(
+						new InputStreamReader( entity.getContent() )
+						);
+				
+				StringBuffer answer = new StringBuffer();
+				String line;
+				
+				
+
+				while ( (line = inputStream.readLine()) != null ) {
+					answer.append(line).append("\n");
+				}
+				_request.abort();	// ~ close connection (?)
+				
+				// debug
+//				System.out.println("answer: >>>\n" + answer + "<<<");
+				
+				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
+					return answer.toString();
+				} else {
+					System.err.println("--- response status: "+response.getStatusLine().getStatusCode());
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("--- oops: "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * login into <code>username</code>'s account
 	 * @param _user username
 	 * @param _password password of username
@@ -90,9 +142,14 @@ public class MyshowsAPI {
 	protected boolean login(String _user, String _password) {
 		
 		if ( httpClient==null ) {
-			System.err.println("--- httpClient=null");
+			System.err.println("--- httpClient=null. create new");
 			
-			return false;
+			httpClient=new DefaultHttpClient();
+			
+			if ( httpClient==null ) {
+				System.err.println("--- httpClient=null again");
+				return false;
+			}
 		}
 		
 		user=_user;
@@ -118,7 +175,7 @@ public class MyshowsAPI {
 			password=hexString.toString();
 			
 			// debug
-			System.out.println("password: "+password);
+//			System.out.println("password: "+password);
 			
 		} catch (Exception e) {
 			System.err.println("--- oops: "+e.toString());
@@ -132,39 +189,30 @@ public class MyshowsAPI {
 		//----------------------
 		
 		String URLs=String.format(URL_API_LOGIN, user, password);
-    	
-		try {
-			HttpGet request = new HttpGet(URLs);
-			
-			HttpResponse response = httpClient.execute(request);
-			
-			// TODO: rewrite checking logged in (?)
-			if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
-				request.abort();	// ~ close connection (?)
-				return true;
-			} else {
-				HttpEntity entity=response.getEntity();
-				if ( entity!=null ) {
-					BufferedReader inputStream = new BufferedReader(
-							new InputStreamReader( entity.getContent() )
-							);
-					String answer = "";
-					String line;
-					while ( (line = inputStream.readLine()) != null ) {
-						answer += (line + "\n");
-					}
-					request.abort();	// ~ close connection (?)
-					
-					System.out.println("answer: >>>\n" + answer + "<<<");
-				}
-			}
-			
-		} catch (Exception e) {
-			System.err.println("--- oops: "+e.getMessage());
-			e.printStackTrace();
-		}
 		
+		HttpGet request = new HttpGet(URLs);
+		
+		if ( executeRequest(request)!=null ) {
+			return true;
+		} else {
+			System.err.println("--- bad executeRequest @ login");
+		}
+    	
 		return false;
+	}
+	
+	/**
+	 * <b>currently</b> drops httpclient
+	 * @return currently <b><code>true</code></b>
+	 */
+	protected boolean logout() {
+		user="";
+		password="";
+		
+		// TODO: temporary workaround. rewrite api's logout (without new httpclient) if possible
+		httpClient=null;
+		
+		return true;
 	}
 	
 	/**
@@ -192,38 +240,8 @@ public class MyshowsAPI {
 			return null;
 		}
 		
-		try {
-			HttpGet request=new HttpGet(URL_API_SHOWS);
-			
-			HttpResponse response=httpClient.execute(request);
-			
-			HttpEntity entity=response.getEntity();
-			if ( entity!=null ) {
-				BufferedReader inputStream = new BufferedReader(
-						new InputStreamReader( entity.getContent() )
-						);
-				String answer = "";
-				String line;
-				while ( (line = inputStream.readLine()) != null ) {
-					answer += (line + "\n");
-				}
-				request.abort();	// ~ close connection (?)
-				
-				// debug
-				System.out.println("answer: >>>\n" + answer + "<<<");
-				
-				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
-					return answer;
-				} else {
-					return null;
-				}
-			}
-		} catch (Exception e) {
-			System.err.println("--- oops: "+e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return null;
+		HttpGet request=new HttpGet(URL_API_SHOWS);
+		return executeRequest(request);
 	}
 	
 	/**
@@ -248,38 +266,8 @@ public class MyshowsAPI {
 			return null;
 		}
 		
-		try {
-			HttpGet request=new HttpGet(URL_API_EPISODES_UNWATCHED);
-			
-			HttpResponse response=httpClient.execute(request);
-			
-			HttpEntity entity=response.getEntity();
-			if ( entity!=null ) {
-				BufferedReader inputStream = new BufferedReader(
-						new InputStreamReader( entity.getContent() )
-						);
-				String answer = "";
-				String line;
-				while ( (line = inputStream.readLine()) != null ) {
-					answer += (line + "\n");
-				}
-				request.abort();	// ~ close connection (?)
-				
-				// debug
-				System.out.println("answer: >>>\n" + answer + "<<<");
-				
-				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
-					return answer;
-				} else {
-					return null;
-				}
-			}
-		} catch (Exception e) {
-			System.err.println("--- oops: "+e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return null;
+		HttpGet request=new HttpGet(URL_API_EPISODES_UNWATCHED);
+		return executeRequest(request);
 	}
 	
 	/**
@@ -304,38 +292,8 @@ public class MyshowsAPI {
 			return null;
 		}
 		
-		try {
-			HttpGet request=new HttpGet(URL_API_EPISODES_NEXT);
-			
-			HttpResponse response=httpClient.execute(request);
-			
-			HttpEntity entity=response.getEntity();
-			if ( entity!=null ) {
-				BufferedReader inputStream = new BufferedReader(
-						new InputStreamReader( entity.getContent() )
-						);
-				String answer = "";
-				String line;
-				while ( (line = inputStream.readLine()) != null ) {
-					answer += (line + "\n");
-				}
-				request.abort();	// ~ close connection (?)
-				
-				// debug
-				System.out.println("answer: >>>\n" + answer + "<<<");
-				
-				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
-					return answer;
-				} else {
-					return null;
-				}
-			}
-		} catch (Exception e) {
-			System.err.println("--- oops: "+e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return null;
+		HttpGet request=new HttpGet(URL_API_EPISODES_NEXT);
+		return executeRequest(request);
 	}
 	
 	/**
@@ -357,39 +315,9 @@ public class MyshowsAPI {
 			return null;
 		}
 		
-		try {
-			String URLs=String.format(URL_API_EPISODES_SEEN, _show);
-			HttpGet request=new HttpGet(URLs);
-			
-			HttpResponse response=httpClient.execute(request);
-			
-			HttpEntity entity=response.getEntity();
-			if ( entity!=null ) {
-				BufferedReader inputStream = new BufferedReader(
-						new InputStreamReader( entity.getContent() )
-						);
-				String answer = "";
-				String line;
-				while ( (line = inputStream.readLine()) != null ) {
-					answer += (line + "\n");
-				}
-				request.abort();	// ~ close connection (?)
-				
-				// debug
-				System.out.println("answer: >>>\n" + answer + "<<<");
-				
-				if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
-					return answer;
-				} else {
-					return null;
-				}
-			}
-		} catch (Exception e) {
-			System.err.println("--- oops: "+e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return null;
+		String URLs=String.format(URL_API_EPISODES_SEEN, _show);
+		HttpGet request=new HttpGet(URLs);
+		return executeRequest(request);
 	}
 
 	/**
@@ -424,38 +352,9 @@ public class MyshowsAPI {
 		} else {
 			URLs=String.format(URL_API_EPISODE_CHECK_RATIO, _episode, _ratio); // TODO: check if ratio appears @ msh web
 		}
-    			
-		try {
-			HttpGet request = new HttpGet(URLs);
-			
-			HttpResponse response = httpClient.execute(request);
-			
-			if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
-				request.abort();	// ~ close connection (?)
-				return true;
-			} else {
-				HttpEntity entity=response.getEntity();
-				if ( entity!=null ) {
-					BufferedReader inputStream = new BufferedReader(
-							new InputStreamReader( entity.getContent() )
-							);
-					String answer = "";
-					String line;
-					while ( (line = inputStream.readLine()) != null ) {
-						answer += (line + "\n");
-					}
-					request.abort();	// ~ close connection (?)
-					
-					System.out.println("answer: >>>\n" + answer + "<<<");
-				}
-			}
-			
-		} catch (Exception e) {
-			System.err.println("--- oops: "+e.getMessage());
-			e.printStackTrace();
-		}
 		
-		return false;
+		HttpGet request = new HttpGet(URLs);
+		return executeRequest(request)==null ? false : true;
 	}
 
 	/**
@@ -471,37 +370,8 @@ public class MyshowsAPI {
 			System.err.println("--- no httpClient || episode");
 			return false;
 		}
-
-		try {
-			HttpGet request = new HttpGet( String.format(URL_API_EPISODE_UNCHECK, _episode) );
-			
-			HttpResponse response = httpClient.execute(request);
-			
-			if ( response.getStatusLine().getStatusCode()==HttpURLConnection.HTTP_OK ) {
-				request.abort();	// ~ close connection (?)
-				return true;
-			} else {
-				HttpEntity entity=response.getEntity();
-				if ( entity!=null ) {
-					BufferedReader inputStream = new BufferedReader(
-							new InputStreamReader( entity.getContent() )
-							);
-					String answer = "";
-					String line;
-					while ( (line = inputStream.readLine()) != null ) {
-						answer += (line + "\n");
-					}
-					request.abort();	// ~ close connection (?)
-					
-					System.out.println("answer: >>>\n" + answer + "<<<");
-				}
-			}
-			
-		} catch (Exception e) {
-			System.err.println("--- oops: "+e.getMessage());
-			e.printStackTrace();
-		}
 		
-		return false;
+		HttpGet request = new HttpGet( String.format(URL_API_EPISODE_UNCHECK, _episode) );
+		return executeRequest(request)==null ? false : true;
 	}
 }

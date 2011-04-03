@@ -51,7 +51,7 @@ public class MyshowsClient {
 	public MyshowsClient() {
 		api=new MyshowsAPI();
 		
-		System.out.println("+++ MyshowsClient()");
+//		System.out.println("+++ MyshowsClient()");
 		
 		// TODO: check if offline
 	}
@@ -65,7 +65,7 @@ public class MyshowsClient {
 	 * 			<code>false</code> otherwise 
 	 */
 	public boolean login(String _username, String _password) {
-		System.out.println("+++ login(String "+_username+", String "+_password+")");
+//		System.out.println("+++ login(String "+_username+", String "+_password+")");
 		
 		return api.login(_username, _password);
 	}
@@ -77,9 +77,8 @@ public class MyshowsClient {
 	 */
 	public boolean logout() {
 		// TODO: implement logout @ API && client
-		System.out.println("+++ logout()");
-		
-		return false;
+//		System.out.println("+++ logout()");
+		return api.logout();
 	}
 	
 	/**
@@ -105,7 +104,7 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONArray getShows() {
-		System.out.println("+++ getShows()");
+//		System.out.println("+++ getShows()");
 		
 		JSONObject shows=null;
 		JSONArray ret=null;
@@ -116,7 +115,7 @@ public class MyshowsClient {
 				// put shows in jsonobject{ "showid":{"info"} }
 				shows=new JSONObject(result);
 				
-				System.out.println(shows.toString(2));
+//				System.out.println(shows.toString(2));
 				// get all "showid"
 				Iterator<String> iter = shows.keys();
 				
@@ -162,7 +161,7 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONArray getUnwatchedEpisodes(int _show) {
-		System.out.println("+++ getUnwatchedEpisodes("+_show+")");
+//		System.out.println("+++ getUnwatchedEpisodes("+_show+")");
 		
 		JSONObject unwatched=null;
 		JSONArray ret=null;
@@ -173,7 +172,7 @@ public class MyshowsClient {
 				// put episodes in jsonobject{ "showid":{"info"} }
 				unwatched=new JSONObject(result);
 				
-				System.out.println(unwatched.toString(2));
+//				System.out.println(unwatched.toString(2));
 				// get all "showid"
 				Iterator<String> iter = unwatched.keys();
 				
@@ -228,7 +227,7 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONArray getNextEpisodes(int _show) {
-		System.out.println("+++ getNextEpisodes("+_show+")");
+//		System.out.println("+++ getNextEpisodes("+_show+")");
 		
 		JSONObject next=null;
 		JSONArray ret=null;
@@ -239,7 +238,7 @@ public class MyshowsClient {
 				// put episodes in jsonobject{ "showid":{"info"} }
 				next=new JSONObject(result);
 				
-				System.out.println(next.toString(2));
+//				System.out.println(next.toString(2));
 				// get all "showid"
 				Iterator<String> iter = next.keys();
 				
@@ -288,7 +287,7 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONArray getSeenEpisodes(int _show) {
-		System.out.println("+++ getSeenEpisodes(int "+_show+")");
+//		System.out.println("+++ getSeenEpisodes(int "+_show+")");
 		
 		JSONObject seen=null;
 		JSONArray ret=null;
@@ -299,7 +298,7 @@ public class MyshowsClient {
 				// put episodes in jsonobject{ "showid":{"info"} }
 				seen=new JSONObject(result);
 				
-				System.out.println(seen.toString(2));
+//				System.out.println(seen.toString(2));
 				// get all "showid"
 				Iterator<String> iter = seen.keys();
 				
@@ -331,7 +330,7 @@ public class MyshowsClient {
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
 	public boolean checkEpisode(int _episode) {
-		System.out.println("+++ checkEpisode(int "+_episode+")");
+//		System.out.println("+++ checkEpisode(int "+_episode+")");
 		
 		return api.checkEpisode(_episode);
 	}
@@ -346,7 +345,7 @@ public class MyshowsClient {
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
 	public boolean checkEpisode(int _episode, int _ratio) {
-		System.out.println("+++ checkEpisode(int "+_episode+", int "+_ratio+")");
+//		System.out.println("+++ checkEpisode(int "+_episode+", int "+_ratio+")");
 		
 		return api.checkEpisode(_episode, _ratio);
 	}
@@ -359,7 +358,7 @@ public class MyshowsClient {
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
 	public boolean unCheckEpisode(int _episode) {
-		System.out.println("+++ unCheckEpisode(int "+_episode+")");
+//		System.out.println("+++ unCheckEpisode(int "+_episode+")");
 		
 		return api.unCheckEpisode(_episode);
 	}
