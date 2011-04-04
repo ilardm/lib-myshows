@@ -9,14 +9,16 @@ Run
     ant release
 to build library and documentation, placed in "lib-myshows-$version".
 "lib-myshows-$version" directory also contains all necessary libraries required
-to work properly
+to work properly.
 
 Current implementation of library(in case you have only .jar file) may be found
-in .jar file "META_INF/MANIFEST.MF"
+in .jar file "META_INF/MANIFEST.MF".
+Version info also included into 'MyshowsAPI.java' represented as auto-generated
+variable updated on every 'ant compile' run.
 
 Run
     ant jar
-to build just .jar, placed in "build/jar"
+to build just .jar, placed in "build/jar".
 
 === REQUIREMENTS ===
 
@@ -25,7 +27,7 @@ Requires
     httpclient-4.0.1.jar
     httpcore-4.0.1.jar
     org-json.jar
-placed near assembled .jar file to work properly
+placed near assembled .jar file to work properly.
 
 === LICENSE ===
 

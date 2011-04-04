@@ -41,6 +41,15 @@
   </target>
 
   <target name="compile">
+	<replaceregexp byline="true"
+				   file="${src.dir}/aid/lib/myshows/MyshowsAPI.java"
+				   match="VERSION=.*F;"
+				   replace="VERSION=${version.num}F;" />
+	<replaceregexp byline="true"
+				   file="${src.dir}/aid/lib/myshows/MyshowsAPI.java"
+				   match="VERSION_FULL=.*;"
+				   replace='VERSION_FULL="${version.num}\.${version.impl}";' />
+
 	<mkdir dir="${classes.dir}" />
 	
 	<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" />

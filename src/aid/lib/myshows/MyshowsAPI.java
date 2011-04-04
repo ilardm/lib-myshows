@@ -47,6 +47,22 @@ import org.apache.http.impl.client.DefaultHttpClient;
  * @author Ilya Arefiev (arefiev.id@gmail.com)
  */
 public class MyshowsAPI {
+	/**
+	 * auto-generated version number<br>
+	 * based on ant build.xml script and reassigned during every 'ant compile'<br>
+	 *
+	 * <b>do not edit this!</b>
+	 */
+	public static final float VERSION=0.1F;
+
+	/**
+	 * auto-generated full (including build number) version number<br>
+	 * based on ant build.xml script and reassigned during every 'ant compile'<br>
+	 *
+	 * <b>do not edit this!</b>
+	 */
+	public static final String VERSION_FULL="0.1.12";
+
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
 	final protected String URL_API_EPISODES_UNWATCHED="http://api.myshows.ru/profile/episodes/unwatched/";
