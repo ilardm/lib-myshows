@@ -362,4 +362,22 @@ public class MyshowsClient {
 		
 		return api.unCheckEpisode(_episode);
 	}
+	
+	public boolean setShowStatus(int _show, String _status) {
+		System.out.println("client.setShowStatus: "+_show+":"+_status);
+		
+		MyshowsAPI.SHOW_STATUS st=MyshowsAPI.SHOW_STATUS.watching;
+		
+		if ( _status.equals("w") ) {
+			st=MyshowsAPI.SHOW_STATUS.watching;
+		} else if ( _status.equals("c") ) {
+			st=MyshowsAPI.SHOW_STATUS.cancelled;
+		} else if ( _status.equals("l") ) {
+			st=MyshowsAPI.SHOW_STATUS.later;
+		} else if ( _status.equals("r") ) {
+			st=MyshowsAPI.SHOW_STATUS.remove;
+		}
+		
+		return api.setShowStatus(_show, st);
+	}
 }

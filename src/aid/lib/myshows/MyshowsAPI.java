@@ -53,7 +53,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final float VERSION=0.1F;
+	public static final float VERSION=0.2F;
 
 	/**
 	 * auto-generated full (including build number) version number<br>
@@ -61,7 +61,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final String VERSION_FULL="0.1.12";
+	public static final String VERSION_FULL="0.2.1";
 
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
@@ -71,6 +71,9 @@ public class MyshowsAPI {
 	final protected String URL_API_EPISODE_CHECK="http://api.myshows.ru/profile/episodes/check/%1$d";
 	final protected String URL_API_EPISODE_CHECK_RATIO="http://api.myshows.ru/profile/episodes/check/%1$d?rating=%2$d";
 	final protected String URL_API_EPISODE_UNCHECK="http://api.myshows.ru/profile/episodes/uncheck/%1$d";
+	final protected String URL_API_SHOW_STATUS="http://api.myshows.ru/profile/shows/%1$d/%2$s"; 
+
+	public enum SHOW_STATUS { watching, later, cancelled, remove };
 	
 	/**
 	 * registered username
@@ -259,7 +262,19 @@ public class MyshowsAPI {
 		HttpGet request=new HttpGet(URL_API_SHOWS);
 		return executeRequest(request);
 	}
-	
+
+	protected boolean setShowStatus(int _show, SHOW_STATUS _status) {
+
+		if ( httpClient==null ) {
+			return false;
+		}
+
+		System.out.println("api: set show("+_show+") status to "+_status.toString());
+
+		HttpGet request=new HttpGet( String.format(URL_API_SHOW_STATUS, _show, _status.toString()) );
+		return ( executeRequest(request)==null ? false : true );
+	}
+
 	/**
 	 * get all unwatched episodes of all user's shows<br>
 	 * <code>JSON string</code> format:
