@@ -415,7 +415,7 @@ public class MyshowsAPI {
 		if ( _ratio<0 || _ratio>5 ) {
 			System.err.println("--- wrong ratio: "+_ratio);
 		} else {
-			URLs=String.format(URL_API_EPISODE_RATIO, _episode, _ratio);
+			URLs=String.format(URL_API_EPISODE_RATIO, _ratio, _episode);
 		}
 
 		HttpGet request = new HttpGet(URLs);
