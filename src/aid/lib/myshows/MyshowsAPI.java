@@ -65,15 +65,28 @@ public class MyshowsAPI {
 
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
+
+	final protected String URL_API_EPISODES_SEEN="http://api.myshows.ru/profile/shows/%1$d/";
 	final protected String URL_API_EPISODES_UNWATCHED="http://api.myshows.ru/profile/episodes/unwatched/";
 	final protected String URL_API_EPISODES_NEXT="http://api.myshows.ru/profile/episodes/next/";
-	final protected String URL_API_EPISODES_SEEN="http://api.myshows.ru/profile/shows/%1$d/";
+
+//	final protected String URL_API_EPISODES_IGNORED="http://api.myshows.ru/profile/episodes/ignored/list/";
+//	final protected String URL_API_EPISODES_IGNORED_ADD="http://api.myshows.ru/profile/episodes/ignored/add/%1$d";
+//	final protected String URL_API_EPISODES_IGNORED_REMOVE="http://api.myshows.ru/profile/episodes/ignored/remove/%1$d";
+
 	final protected String URL_API_EPISODE_CHECK="http://api.myshows.ru/profile/episodes/check/%1$d";
 	final protected String URL_API_EPISODE_CHECK_RATIO="http://api.myshows.ru/profile/episodes/check/%1$d?rating=%2$d";
 	final protected String URL_API_EPISODE_UNCHECK="http://api.myshows.ru/profile/episodes/uncheck/%1$d";
-	final protected String URL_API_SHOW_STATUS="http://api.myshows.ru/profile/shows/%1$d/%2$s"; 
+//	final protected String URL_API_EPISODE_RATIO="http://api.myshows.ru/profile/episodes/rate/%1$d/$2%d"; // ratio/episode
 
 	public enum SHOW_STATUS { watching, later, cancelled, remove };
+	final protected String URL_API_SHOW_STATUS="http://api.myshows.ru/profile/shows/%1$d/%2$s";
+//	final protected String URL_API_SHOW_RATIO="http://api.myshows.ru/profile/shows/%1$d/rate/%2$d"; // show/ratio
+
+//	final protected String URL_API_SHOW_FAVORITE_ADD="http://api.myshows.ru/profile/episodes/favorites/add/%1$d";
+//	final protected String URL_API_SHOW_FAVORITE_REMOVE="http://api.myshows.ru/profile/episodes/favorites/remove/%1$d";
+
+//	final protected String URL_API_NEWS="http://api.myshows.ru/profile/news/";
 	
 	/**
 	 * registered username
