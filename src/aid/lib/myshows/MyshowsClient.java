@@ -392,4 +392,10 @@ public class MyshowsClient {
 
 		return api.setShowRatio(_show, _ratio);
 	}
+
+	public boolean favoriteShow(int _show,  boolean _add) {
+		System.out.println( (_add ? "add" : "remove") + " favorite show #"+_show);
+
+		return api.favoriteShow(_show, _add);
+	}
 }

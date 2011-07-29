@@ -61,7 +61,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final String VERSION_FULL="0.2.4";
+	public static final String VERSION_FULL="0.2.5";
 
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
@@ -83,8 +83,8 @@ public class MyshowsAPI {
 	final protected String URL_API_SHOW_STATUS="http://api.myshows.ru/profile/shows/%1$d/%2$s";
 	final protected String URL_API_SHOW_RATIO="http://api.myshows.ru/profile/shows/%1$d/rate/%2$d"; // show/ratio
 
-//	final protected String URL_API_SHOW_FAVORITE_ADD="http://api.myshows.ru/profile/episodes/favorites/add/%1$d";
-//	final protected String URL_API_SHOW_FAVORITE_REMOVE="http://api.myshows.ru/profile/episodes/favorites/remove/%1$d";
+	final protected String URL_API_SHOW_FAVORITE_ADD="http://api.myshows.ru/profile/episodes/favorites/add/%1$d";
+	final protected String URL_API_SHOW_FAVORITE_REMOVE="http://api.myshows.ru/profile/episodes/favorites/remove/%1$d";
 
 //	final protected String URL_API_NEWS="http://api.myshows.ru/profile/news/";
 	
@@ -458,6 +458,20 @@ public class MyshowsAPI {
 		}
 		
 		HttpGet request = new HttpGet( String.format(URL_API_EPISODE_UNCHECK, _episode) );
+		return executeRequest(request)==null ? false : true;
+	}
+
+	// TODO: docs
+	protected boolean favoriteShow(int _show, boolean _add) {
+		if ( httpClient==null || _show<0 ) {
+			// debug
+			System.err.println("--- no httpClient || _show");
+			return false;
+		}
+
+		HttpGet request = new HttpGet( String.format(
+				_add==true ? URL_API_SHOW_FAVORITE_ADD : URL_API_SHOW_FAVORITE_REMOVE,
+				_show) );
 		return executeRequest(request)==null ? false : true;
 	}
 }
