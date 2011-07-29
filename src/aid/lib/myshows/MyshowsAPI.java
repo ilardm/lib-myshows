@@ -61,7 +61,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final String VERSION_FULL="0.2.1";
+	public static final String VERSION_FULL="0.2.2";
 
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
@@ -77,7 +77,7 @@ public class MyshowsAPI {
 	final protected String URL_API_EPISODE_CHECK="http://api.myshows.ru/profile/episodes/check/%1$d";
 	final protected String URL_API_EPISODE_CHECK_RATIO="http://api.myshows.ru/profile/episodes/check/%1$d?rating=%2$d";
 	final protected String URL_API_EPISODE_UNCHECK="http://api.myshows.ru/profile/episodes/uncheck/%1$d";
-//	final protected String URL_API_EPISODE_RATIO="http://api.myshows.ru/profile/episodes/rate/%1$d/$2%d"; // ratio/episode
+	final protected String URL_API_EPISODE_RATIO="http://api.myshows.ru/profile/episodes/rate/%1$d/$2%d"; // ratio/episode
 
 	public enum SHOW_STATUS { watching, later, cancelled, remove };
 	final protected String URL_API_SHOW_STATUS="http://api.myshows.ru/profile/shows/%1$d/%2$s";
@@ -276,6 +276,7 @@ public class MyshowsAPI {
 		return executeRequest(request);
 	}
 
+	// TODO: docs
 	protected boolean setShowStatus(int _show, SHOW_STATUS _status) {
 
 		if ( httpClient==null ) {
@@ -397,6 +398,26 @@ public class MyshowsAPI {
 			URLs=String.format(URL_API_EPISODE_CHECK_RATIO, _episode, _ratio); // TODO: check if ratio appears @ msh web
 		}
 		
+		HttpGet request = new HttpGet(URLs);
+		return executeRequest(request)==null ? false : true;
+	}
+
+	// TODO: docs
+	protected boolean setEpisodeRatio(int _episode, int _ratio) {
+
+		if ( httpClient==null || _episode<0 ) {
+			// debug
+			System.err.println("--- no httpClient || episode");
+			return false;
+		}
+
+		String URLs=null;
+		if ( _ratio<0 || _ratio>5 ) {
+			System.err.println("--- wrong ratio: "+_ratio);
+		} else {
+			URLs=String.format(URL_API_EPISODE_RATIO, _episode, _ratio);
+		}
+
 		HttpGet request = new HttpGet(URLs);
 		return executeRequest(request)==null ? false : true;
 	}
