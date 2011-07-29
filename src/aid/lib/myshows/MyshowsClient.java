@@ -351,7 +351,7 @@ public class MyshowsClient {
 	}
 
 	public boolean setEpisodeRatio(int _episode, int _ratio) {
-		System.out.println("+++ setEpisodeRatio("+_episode+", "+_ratio+")");
+//		System.out.println("+++ setEpisodeRatio("+_episode+", "+_ratio+")");
 
 		return api.setEpisodeRatio(_episode, _ratio);
 	}
@@ -385,5 +385,11 @@ public class MyshowsClient {
 		}
 		
 		return api.setShowStatus(_show, st);
+	}
+
+	public boolean setShowRatio(int _show, int _ratio) {
+//		System.out.println("+++ setShowRatio("+_show+", "+_ratio+")");
+
+		return api.setShowRatio(_show, _ratio);
 	}
 }

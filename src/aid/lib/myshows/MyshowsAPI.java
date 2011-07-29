@@ -61,7 +61,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final String VERSION_FULL="0.2.3";
+	public static final String VERSION_FULL="0.2.4";
 
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
@@ -81,7 +81,7 @@ public class MyshowsAPI {
 
 	public enum SHOW_STATUS { watching, later, cancelled, remove };
 	final protected String URL_API_SHOW_STATUS="http://api.myshows.ru/profile/shows/%1$d/%2$s";
-//	final protected String URL_API_SHOW_RATIO="http://api.myshows.ru/profile/shows/%1$d/rate/%2$d"; // show/ratio
+	final protected String URL_API_SHOW_RATIO="http://api.myshows.ru/profile/shows/%1$d/rate/%2$d"; // show/ratio
 
 //	final protected String URL_API_SHOW_FAVORITE_ADD="http://api.myshows.ru/profile/episodes/favorites/add/%1$d";
 //	final protected String URL_API_SHOW_FAVORITE_REMOVE="http://api.myshows.ru/profile/episodes/favorites/remove/%1$d";
@@ -289,6 +289,26 @@ public class MyshowsAPI {
 		return ( executeRequest(request)==null ? false : true );
 	}
 
+	// TODO: docs
+	protected boolean setShowRatio(int _show, int _ratio) {
+		if ( httpClient==null || _show<0 ) {
+			// debug
+			System.err.println("--- no httpClient || show");
+			return false;
+		}
+
+		String URLs=null;
+		if ( _ratio<0 || _ratio>5 ) {
+			System.err.println("--- wrong ratio: "+_ratio);
+			return false;
+		} else {
+			URLs=String.format(URL_API_SHOW_RATIO, _show, _ratio);
+		}
+
+		HttpGet request = new HttpGet(URLs);
+		return executeRequest(request)==null ? false : true;
+	}
+
 	/**
 	 * get all unwatched episodes of all user's shows<br>
 	 * <code>JSON string</code> format:
@@ -414,6 +434,7 @@ public class MyshowsAPI {
 		String URLs=null;
 		if ( _ratio<0 || _ratio>5 ) {
 			System.err.println("--- wrong ratio: "+_ratio);
+			return false;
 		} else {
 			URLs=String.format(URL_API_EPISODE_RATIO, _ratio, _episode);
 		}
