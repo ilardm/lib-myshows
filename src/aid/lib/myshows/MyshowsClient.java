@@ -349,6 +349,12 @@ public class MyshowsClient {
 		
 		return api.checkEpisode(_episode, _ratio);
 	}
+
+	public boolean setEpisodeRatio(int _episode, int _ratio) {
+		System.out.println("+++ setEpisodeRatio("+_episode+", "+_ratio+")");
+
+		return api.setEpisodeRatio(_episode, _ratio);
+	}
 	
 	/**
 	 * mark episode as unwatched<br>
