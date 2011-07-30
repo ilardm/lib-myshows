@@ -61,7 +61,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final String VERSION_FULL="0.2.5";
+	public static final String VERSION_FULL="0.2.7";
 
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
@@ -70,9 +70,10 @@ public class MyshowsAPI {
 	final protected String URL_API_EPISODES_UNWATCHED="http://api.myshows.ru/profile/episodes/unwatched/";
 	final protected String URL_API_EPISODES_NEXT="http://api.myshows.ru/profile/episodes/next/";
 
-//	final protected String URL_API_EPISODES_IGNORED="http://api.myshows.ru/profile/episodes/ignored/list/";
-//	final protected String URL_API_EPISODES_IGNORED_ADD="http://api.myshows.ru/profile/episodes/ignored/add/%1$d";
-//	final protected String URL_API_EPISODES_IGNORED_REMOVE="http://api.myshows.ru/profile/episodes/ignored/remove/%1$d";
+	/* unused API ? */
+	final protected String URL_API_EPISODES_IGNORED="http://api.myshows.ru/profile/episodes/ignored/list/";
+	final protected String URL_API_EPISODES_IGNORED_ADD="http://api.myshows.ru/profile/episodes/ignored/add/%1$d";
+	final protected String URL_API_EPISODES_IGNORED_REMOVE="http://api.myshows.ru/profile/episodes/ignored/remove/%1$d";
 
 	final protected String URL_API_EPISODE_CHECK="http://api.myshows.ru/profile/episodes/check/%1$d";
 	final protected String URL_API_EPISODE_CHECK_RATIO="http://api.myshows.ru/profile/episodes/check/%1$d?rating=%2$d";
@@ -83,6 +84,7 @@ public class MyshowsAPI {
 	final protected String URL_API_SHOW_STATUS="http://api.myshows.ru/profile/shows/%1$d/%2$s";
 	final protected String URL_API_SHOW_RATIO="http://api.myshows.ru/profile/shows/%1$d/rate/%2$d"; // show/ratio
 
+	/* unuseed API*/
 	final protected String URL_API_SHOW_FAVORITE_ADD="http://api.myshows.ru/profile/episodes/favorites/add/%1$d";
 	final protected String URL_API_SHOW_FAVORITE_REMOVE="http://api.myshows.ru/profile/episodes/favorites/remove/%1$d";
 
@@ -360,7 +362,31 @@ public class MyshowsAPI {
 		HttpGet request=new HttpGet(URL_API_EPISODES_NEXT);
 		return executeRequest(request);
 	}
-	
+
+	// TODO: docs
+	protected String getIgnoredEpisodes() {
+		if ( httpClient==null ) {
+			return null;
+		}
+
+		HttpGet request=new HttpGet(URL_API_EPISODES_IGNORED);
+		return executeRequest(request);
+	}
+
+	// TODO: docs
+	protected boolean ignoreEpisode(int _episode, boolean _add) {
+		if ( httpClient==null || _episode<0 ) {
+			// debug
+			System.err.println("--- no httpClient || _episode");
+			return false;
+		}
+
+		HttpGet request = new HttpGet( String.format(
+				_add==true ? URL_API_EPISODES_IGNORED_ADD : URL_API_EPISODES_IGNORED_REMOVE,
+				_episode) );
+		return executeRequest(request)==null ? false : true;
+	}
+
 	/**
 	 * get seen episodes of user's show (given by <code>_show</code>)<br>
 	 * <code>JSON string</code> format:

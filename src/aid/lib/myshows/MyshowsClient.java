@@ -270,6 +270,29 @@ public class MyshowsClient {
 		
 		return ret;
 	}
+
+	public JSONArray getIgnoredEpisodes() {
+		JSONArray ret=null;
+
+		String result=api.getIgnoredEpisodes();
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONArray(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		return ret;
+	}
+
+	public boolean ignoreEpisode(int _episode,  boolean _add) {
+//		System.out.println( (_add ? "add" : "remove") + " ignored episode #"+_episode);
+
+		return api.ignoreEpisode(_episode, _add);
+	}
 	
 	/**
 	 * get seen episodes of user's show (given by <code>_show</code>)<br>
