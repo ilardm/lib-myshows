@@ -421,4 +421,39 @@ public class MyshowsClient {
 
 		return api.favoriteShow(_show, _add);
 	}
+
+	/*
+	 * {
+  "10.07.2011": [{
+    "action": "watch",
+    "episode": "s03e14",
+    "episodeId": 687,
+    "episodes": 1,
+    "gender": "m",
+    "login": "ilardm",
+    "show": "Everybody Hates Chris",
+    "showId": 9,
+    "title": "Everybody Hates Easter"
+  }],
+  ...
+  }
+	 */
+	public JSONObject getFriendsUpdates() {
+		JSONObject ret=null;
+
+		String result=api.getFriendsUpdates();
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONObject(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- oops: NULL from API call");
+		}
+
+		return ret;
+	}
 }

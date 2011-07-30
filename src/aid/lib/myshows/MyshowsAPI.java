@@ -61,7 +61,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final String VERSION_FULL="0.2.7";
+	public static final String VERSION_FULL="0.2.8";
 
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
@@ -88,7 +88,7 @@ public class MyshowsAPI {
 	final protected String URL_API_SHOW_FAVORITE_ADD="http://api.myshows.ru/profile/episodes/favorites/add/%1$d";
 	final protected String URL_API_SHOW_FAVORITE_REMOVE="http://api.myshows.ru/profile/episodes/favorites/remove/%1$d";
 
-//	final protected String URL_API_NEWS="http://api.myshows.ru/profile/news/";
+	final protected String URL_API_NEWS="http://api.myshows.ru/profile/news/";
 	
 	/**
 	 * registered username
@@ -499,5 +499,15 @@ public class MyshowsAPI {
 				_add==true ? URL_API_SHOW_FAVORITE_ADD : URL_API_SHOW_FAVORITE_REMOVE,
 				_show) );
 		return executeRequest(request)==null ? false : true;
+	}
+
+	// TODO: docs
+	protected String getFriendsUpdates() {
+		if ( httpClient==null ) {
+			return null;
+		}
+
+		HttpGet request=new HttpGet(URL_API_NEWS);
+		return executeRequest(request);
 	}
 }
