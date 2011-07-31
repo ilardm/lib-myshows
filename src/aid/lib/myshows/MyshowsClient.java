@@ -270,6 +270,29 @@ public class MyshowsClient {
 		
 		return ret;
 	}
+
+	public JSONArray getIgnoredEpisodes() {
+		JSONArray ret=null;
+
+		String result=api.getIgnoredEpisodes();
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONArray(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		return ret;
+	}
+
+	public boolean ignoreEpisode(int _episode,  boolean _add) {
+//		System.out.println( (_add ? "add" : "remove") + " ignored episode #"+_episode);
+
+		return api.ignoreEpisode(_episode, _add);
+	}
 	
 	/**
 	 * get seen episodes of user's show (given by <code>_show</code>)<br>
@@ -349,6 +372,12 @@ public class MyshowsClient {
 		
 		return api.checkEpisode(_episode, _ratio);
 	}
+
+	public boolean setEpisodeRatio(int _episode, int _ratio) {
+//		System.out.println("+++ setEpisodeRatio("+_episode+", "+_ratio+")");
+
+		return api.setEpisodeRatio(_episode, _ratio);
+	}
 	
 	/**
 	 * mark episode as unwatched<br>
@@ -361,5 +390,70 @@ public class MyshowsClient {
 //		System.out.println("+++ unCheckEpisode(int "+_episode+")");
 		
 		return api.unCheckEpisode(_episode);
+	}
+	
+	public boolean setShowStatus(int _show, String _status) {
+		System.out.println("client.setShowStatus: "+_show+":"+_status);
+		
+		MyshowsAPI.SHOW_STATUS st=MyshowsAPI.SHOW_STATUS.watching;
+		
+		if ( _status.equals("w") ) {
+			st=MyshowsAPI.SHOW_STATUS.watching;
+		} else if ( _status.equals("c") ) {
+			st=MyshowsAPI.SHOW_STATUS.cancelled;
+		} else if ( _status.equals("l") ) {
+			st=MyshowsAPI.SHOW_STATUS.later;
+		} else if ( _status.equals("r") ) {
+			st=MyshowsAPI.SHOW_STATUS.remove;
+		}
+		
+		return api.setShowStatus(_show, st);
+	}
+
+	public boolean setShowRatio(int _show, int _ratio) {
+//		System.out.println("+++ setShowRatio("+_show+", "+_ratio+")");
+
+		return api.setShowRatio(_show, _ratio);
+	}
+
+	public boolean favoriteShow(int _show,  boolean _add) {
+		System.out.println( (_add ? "add" : "remove") + " favorite show #"+_show);
+
+		return api.favoriteShow(_show, _add);
+	}
+
+	/*
+	 * {
+  "10.07.2011": [{
+    "action": "watch",
+    "episode": "s03e14",
+    "episodeId": 687,
+    "episodes": 1,
+    "gender": "m",
+    "login": "ilardm",
+    "show": "Everybody Hates Chris",
+    "showId": 9,
+    "title": "Everybody Hates Easter"
+  }],
+  ...
+  }
+	 */
+	public JSONObject getFriendsUpdates() {
+		JSONObject ret=null;
+
+		String result=api.getFriendsUpdates();
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONObject(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- oops: NULL from API call");
+		}
+
+		return ret;
 	}
 }

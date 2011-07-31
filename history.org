@@ -1,10 +1,5 @@
-* TODO v0.2
-** TODO httpClient
-   - migrate to own httpClient
-	 (based on developed earlier library for lib-greader)
+* v0.3
 ** TODO client
-*** TODO classes(?) 4 shows && episodes
-	- use hashmaps(?) instead of JSON[Array|Object]s
 *** TODO caching
 	- make show && episodes objects serializable
 	  serialize into separate files for each user
@@ -15,6 +10,14 @@
 	  [un]check episodes
 	- detect on startup (with manual control)
 	- use cache && queue in offline mode
+
+* TODO v0.2
+** TODO api
+*** TODO full api support
+	- part 1
+** TODO client
+*** TODO classes(?) 4 shows && episodes
+	- use hashmaps(?) instead of JSON[Array|Object]s
 
 * DONE v0.1 b13 <2011-04-04>
 ** DONE basic API
