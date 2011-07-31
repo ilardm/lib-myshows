@@ -1,0 +1,27 @@
+* v0.3
+** TODO client
+*** TODO caching
+	- make show && episodes objects serializable
+	  serialize into separate files for each user
+	- (?) time to keep cache
+	- manual sync
+*** TODO [on|off]line mode
+	- actions queue
+	  [un]check episodes
+	- detect on startup (with manual control)
+	- use cache && queue in offline mode
+
+* TODO v0.2
+** DONE api b11 <2011-07-31>
+*** DONE full api support
+	- part 1
+** TODO client
+*** TODO classes(?) 4 shows && episodes
+	- use hashmaps(?) instead of JSON[Array|Object]s
+
+* DONE v0.1 b13 <2011-04-04>
+** DONE basic API
+   + get shows && episodes
+   + [un]check episodes
+** DONE basic client
+   + return JSON array||object

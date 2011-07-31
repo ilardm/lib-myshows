@@ -51,7 +51,7 @@ public class MyshowsClient {
 	public MyshowsClient() {
 		api=new MyshowsAPI();
 		
-		System.out.println("+++ MyshowsClient()");
+//		System.out.println("+++ MyshowsClient()");
 		
 		// TODO: check if offline
 	}
@@ -65,7 +65,7 @@ public class MyshowsClient {
 	 * 			<code>false</code> otherwise 
 	 */
 	public boolean login(String _username, String _password) {
-		System.out.println("+++ login(String "+_username+", String "+_password+")");
+//		System.out.println("+++ login(String "+_username+", String "+_password+")");
 		
 		return api.login(_username, _password);
 	}
@@ -77,9 +77,8 @@ public class MyshowsClient {
 	 */
 	public boolean logout() {
 		// TODO: implement logout @ API && client
-		System.out.println("+++ logout()");
-		
-		return false;
+//		System.out.println("+++ logout()");
+		return api.logout();
 	}
 	
 	/**
@@ -105,7 +104,7 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONArray getShows() {
-		System.out.println("+++ getShows()");
+//		System.out.println("+++ getShows()");
 		
 		JSONObject shows=null;
 		JSONArray ret=null;
@@ -116,7 +115,7 @@ public class MyshowsClient {
 				// put shows in jsonobject{ "showid":{"info"} }
 				shows=new JSONObject(result);
 				
-				System.out.println(shows.toString(2));
+//				System.out.println(shows.toString(2));
 				// get all "showid"
 				Iterator<String> iter = shows.keys();
 				
@@ -149,7 +148,7 @@ public class MyshowsClient {
 		<pre>[
   {
     "airDate": "$dd.mm.yyyy",
-    "episodeId": $episode_id,
+    "episodeId": $episodeId,
     "episodeNumber": $episode_number,
     "seasonNumber": $season_number,
     "showId": $showId,
@@ -162,7 +161,7 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONArray getUnwatchedEpisodes(int _show) {
-		System.out.println("+++ getUnwatchedEpisodes("+_show+")");
+//		System.out.println("+++ getUnwatchedEpisodes("+_show+")");
 		
 		JSONObject unwatched=null;
 		JSONArray ret=null;
@@ -173,7 +172,7 @@ public class MyshowsClient {
 				// put episodes in jsonobject{ "showid":{"info"} }
 				unwatched=new JSONObject(result);
 				
-				System.out.println(unwatched.toString(2));
+//				System.out.println(unwatched.toString(2));
 				// get all "showid"
 				Iterator<String> iter = unwatched.keys();
 				
@@ -213,9 +212,9 @@ public class MyshowsClient {
 	 * <code>_show</code> (if <code>_show</code>>0)<br>
 	 * {@link JSONArray} format:
 		<pre>[
-  "$episode_id": {
+  {
     "airDate": "$dd.mm.yyyy",
-    "episodeId": $episode_id,
+    "episodeId": $episodeId,
     "episodeNumber": $episode_number,
     "seasonNumber": $season_number,
     "showId": $showId,
@@ -228,7 +227,7 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONArray getNextEpisodes(int _show) {
-		System.out.println("+++ getNextEpisodes("+_show+")");
+//		System.out.println("+++ getNextEpisodes("+_show+")");
 		
 		JSONObject next=null;
 		JSONArray ret=null;
@@ -239,7 +238,7 @@ public class MyshowsClient {
 				// put episodes in jsonobject{ "showid":{"info"} }
 				next=new JSONObject(result);
 				
-				System.out.println(next.toString(2));
+//				System.out.println(next.toString(2));
 				// get all "showid"
 				Iterator<String> iter = next.keys();
 				
@@ -271,19 +270,38 @@ public class MyshowsClient {
 		
 		return ret;
 	}
+
+	public JSONArray getIgnoredEpisodes() {
+		JSONArray ret=null;
+
+		String result=api.getIgnoredEpisodes();
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONArray(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		return ret;
+	}
+
+	public boolean ignoreEpisode(int _episode,  boolean _add) {
+//		System.out.println( (_add ? "add" : "remove") + " ignored episode #"+_episode);
+
+		return api.ignoreEpisode(_episode, _add);
+	}
 	
 	/**
 	 * get seen episodes of user's show (given by <code>_show</code>)<br>
 	 * calls <code>MyshowsAPI.getSeenEpisodes()</code><br>
 	 * {@link JSONArray} format:
 		<pre>[
-  "$episode_id": {
-    "airDate": "$dd.mm.yyyy",
-    "episodeId": $episode_id,
-    "episodeNumber": $episode_number,
-    "seasonNumber": $season_number,
-    "showId": $showId,
-    "title": "$original_episode_title"
+  {
+    "id": $episodeId,
+    "watchDate": "$dd.mm.yyyy"
   }
 ]
 		</pre>
@@ -292,7 +310,7 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONArray getSeenEpisodes(int _show) {
-		System.out.println("+++ getSeenEpisodes(int "+_show+")");
+//		System.out.println("+++ getSeenEpisodes(int "+_show+")");
 		
 		JSONObject seen=null;
 		JSONArray ret=null;
@@ -303,7 +321,7 @@ public class MyshowsClient {
 				// put episodes in jsonobject{ "showid":{"info"} }
 				seen=new JSONObject(result);
 				
-				System.out.println(seen.toString(2));
+//				System.out.println(seen.toString(2));
 				// get all "showid"
 				Iterator<String> iter = seen.keys();
 				
@@ -330,12 +348,12 @@ public class MyshowsClient {
 	/**
 	 * mark episode as watched<br>
 	 * calls <code>MyshowsAPI.checkEpisode(_episode)</code><br>
-	 * @param _episode $episode_id
+	 * @param _episode $episodeId
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
 	public boolean checkEpisode(int _episode) {
-		System.out.println("+++ checkEpisode(int "+_episode+")");
+//		System.out.println("+++ checkEpisode(int "+_episode+")");
 		
 		return api.checkEpisode(_episode);
 	}
@@ -344,27 +362,98 @@ public class MyshowsClient {
 	/**
 	 * mark episode as watched with ratio<br>
 	 * calls <code>MyshowsAPI.checkEpisode(_episode, _ratio)</code>
-	 * @param _episode $episode_id
+	 * @param _episode $episodeId
 	 * @param _ratio $ratio // <b>currently useless</b>
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
 	public boolean checkEpisode(int _episode, int _ratio) {
-		System.out.println("+++ checkEpisode(int "+_episode+", int "+_ratio+")");
+//		System.out.println("+++ checkEpisode(int "+_episode+", int "+_ratio+")");
 		
 		return api.checkEpisode(_episode, _ratio);
+	}
+
+	public boolean setEpisodeRatio(int _episode, int _ratio) {
+//		System.out.println("+++ setEpisodeRatio("+_episode+", "+_ratio+")");
+
+		return api.setEpisodeRatio(_episode, _ratio);
 	}
 	
 	/**
 	 * mark episode as unwatched<br>
 	 * calls <code>MyshowsAPI.unCheckEpisode(_episode)</code>
-	 * @param _episode $episode_id
+	 * @param _episode $episodeId
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
 	public boolean unCheckEpisode(int _episode) {
-		System.out.println("+++ unCheckEpisode(int "+_episode+")");
+//		System.out.println("+++ unCheckEpisode(int "+_episode+")");
 		
 		return api.unCheckEpisode(_episode);
+	}
+	
+	public boolean setShowStatus(int _show, String _status) {
+		System.out.println("client.setShowStatus: "+_show+":"+_status);
+		
+		MyshowsAPI.SHOW_STATUS st=MyshowsAPI.SHOW_STATUS.watching;
+		
+		if ( _status.equals("w") ) {
+			st=MyshowsAPI.SHOW_STATUS.watching;
+		} else if ( _status.equals("c") ) {
+			st=MyshowsAPI.SHOW_STATUS.cancelled;
+		} else if ( _status.equals("l") ) {
+			st=MyshowsAPI.SHOW_STATUS.later;
+		} else if ( _status.equals("r") ) {
+			st=MyshowsAPI.SHOW_STATUS.remove;
+		}
+		
+		return api.setShowStatus(_show, st);
+	}
+
+	public boolean setShowRatio(int _show, int _ratio) {
+//		System.out.println("+++ setShowRatio("+_show+", "+_ratio+")");
+
+		return api.setShowRatio(_show, _ratio);
+	}
+
+	public boolean favoriteShow(int _show,  boolean _add) {
+		System.out.println( (_add ? "add" : "remove") + " favorite show #"+_show);
+
+		return api.favoriteShow(_show, _add);
+	}
+
+	/*
+	 * {
+  "10.07.2011": [{
+    "action": "watch",
+    "episode": "s03e14",
+    "episodeId": 687,
+    "episodes": 1,
+    "gender": "m",
+    "login": "ilardm",
+    "show": "Everybody Hates Chris",
+    "showId": 9,
+    "title": "Everybody Hates Easter"
+  }],
+  ...
+  }
+	 */
+	public JSONObject getFriendsUpdates() {
+		JSONObject ret=null;
+
+		String result=api.getFriendsUpdates();
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONObject(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- oops: NULL from API call");
+		}
+
+		return ret;
 	}
 }
