@@ -40,6 +40,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONString;
 
 /** 
  * MyShows API
@@ -56,12 +59,20 @@ public class MyshowsAPI {
 	public static final float VERSION=0.2F;
 
 	/**
-	 * auto-generated full (including build number) version number<br>
+	 * auto-generated build number<br>
 	 * based on ant build.xml script and reassigned during every 'ant compile'<br>
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final String VERSION_FULL="0.2.8";
+	public static final int VERSION_BUILD=10;
+
+	/**
+	 * auto-generated full version number<br>
+	 * based on ant build.xml script and reassigned during every 'ant compile'<br>
+	 *
+	 * <b>do not edit this!</b>
+	 */
+	public static final String VERSION_FULL=VERSION+"."+VERSION_BUILD;
 
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
@@ -80,6 +91,16 @@ public class MyshowsAPI {
 	final protected String URL_API_EPISODE_UNCHECK="http://api.myshows.ru/profile/episodes/uncheck/%1$d";
 	final protected String URL_API_EPISODE_RATIO="http://api.myshows.ru/profile/episodes/rate/%1$d/%2$d"; // ratio/episode
 
+	/**
+	 * show status. one of
+	 * <ul>
+	 * <li>watching
+	 * <li>later
+	 * <li>cancelled
+	 * <li>remove
+	 * </ul>
+	 * @see <a href="http://api.myshows.ru/">http://api.myshows.ru/</a>
+	 */
 	public enum SHOW_STATUS { watching, later, cancelled, remove };
 	final protected String URL_API_SHOW_STATUS="http://api.myshows.ru/profile/shows/%1$d/%2$s";
 	final protected String URL_API_SHOW_RATIO="http://api.myshows.ru/profile/shows/%1$d/rate/%2$d"; // show/ratio
@@ -278,20 +299,33 @@ public class MyshowsAPI {
 		return executeRequest(request);
 	}
 
-	// TODO: docs
+	/**
+	 * sets show status (watching, canceled, etc.)
+	 * @param _show showID
+	 * @param _status show status to set
+	 * @see SHOW_STATUS
+	 * @return <code>true</code> if success
+	 * 			<code>false</code> otherwise
+	 */
 	protected boolean setShowStatus(int _show, SHOW_STATUS _status) {
 
 		if ( httpClient==null ) {
 			return false;
 		}
 
-		System.out.println("api: set show("+_show+") status to "+_status.toString());
+//		System.out.println("api: set show("+_show+") status to "+_status.toString());
 
 		HttpGet request=new HttpGet( String.format(URL_API_SHOW_STATUS, _show, _status.toString()) );
 		return ( executeRequest(request)==null ? false : true );
 	}
 
-	// TODO: docs
+	/**
+	 * sets show ratio
+	 * @param _show showId
+	 * @param _ratio show ratio (between 0 and 5) to set
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	protected boolean setShowRatio(int _show, int _ratio) {
 		if ( httpClient==null || _show<0 ) {
 			// debug
@@ -363,7 +397,13 @@ public class MyshowsAPI {
 		return executeRequest(request);
 	}
 
-	// TODO: docs
+	/**
+	 * get ignored shows {@link String} with {@link JSONArray}<br>
+	 * format is:
+	 * <pre>["$eisodeId","$episodeId",...]</pre>
+	 * @return {@link String} with {@link JSONArray} if success<br>
+	 * 			<code>null</code> otherwise
+	 */
 	protected String getIgnoredEpisodes() {
 		if ( httpClient==null ) {
 			return null;
@@ -373,7 +413,15 @@ public class MyshowsAPI {
 		return executeRequest(request);
 	}
 
-	// TODO: docs
+	/**
+	 * add/remove episode to/from ignored<br>
+	 * <i>appears only in API calls -- don't know if can see in web-interface</i>
+	 * @param _episode episodeId to add/remove to/from ignored
+	 * @param _add <code>true</code> if add<br>
+	 * 				<code>false</code> if remove
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	protected boolean ignoreEpisode(int _episode, boolean _add) {
 		if ( httpClient==null || _episode<0 ) {
 			// debug
@@ -425,7 +473,8 @@ public class MyshowsAPI {
 	/**
 	 * mark episode as watched with ratio<br>
 	 * @param _episode $episodeId
-	 * @param _ratio if ( _ratio<0 ) { no ratio for http call using }
+	 * @param _ratio episode ratio (between 0 and 5)<br>
+	 * 			if ( _ratio<0 ) { no ratio for http call using }
 	 * @return <code>true</code> if success<br>
 	 * 			<code>false</code> otherwise (likely unauthorized)
 	 */
@@ -442,13 +491,20 @@ public class MyshowsAPI {
 			URLs=String.format(URL_API_EPISODE_CHECK, _episode);
 		} else {
 			URLs=String.format(URL_API_EPISODE_CHECK_RATIO, _episode, _ratio); // TODO: check if ratio appears @ msh web
+			// TODO: mb use setEpisodeRatio() as workaround?
 		}
 		
 		HttpGet request = new HttpGet(URLs);
 		return executeRequest(request)==null ? false : true;
 	}
 
-	// TODO: docs
+	/**
+	 * sets episode ratio
+	 * @param _episode episodeId
+	 * @param _ratio episode ratio (between 0 and 5) to set
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	protected boolean setEpisodeRatio(int _episode, int _ratio) {
 
 		if ( httpClient==null || _episode<0 ) {
@@ -487,7 +543,15 @@ public class MyshowsAPI {
 		return executeRequest(request)==null ? false : true;
 	}
 
-	// TODO: docs
+	/**
+	 * add/remove show to/from favorites<br>
+	 * <i>appears only in API calls -- don't know if can see in web-interface</i>
+	 * @param _show showId
+	 * @param _add <code>true</code> if add to favorites<br>
+	 * 			<code>false</code> if remove from favorites
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	protected boolean favoriteShow(int _show, boolean _add) {
 		if ( httpClient==null || _show<0 ) {
 			// debug
@@ -501,7 +565,29 @@ public class MyshowsAPI {
 		return executeRequest(request)==null ? false : true;
 	}
 
-	// TODO: docs
+	/**
+	 * get {@link String} with {@link JSONObject} of friends news<br>
+	 * format is:
+	 * <pre>
+	 * {
+  "$date": [{ // dd.MM.yyyy
+    "action": "$action", // watch, // TODO: other actions?
+    "episode": "s03e14",
+    "episodeId": $episodeId,
+    "episodes": $number_of_episodes, // if >1 {episodeId=null, title=null, episode=":"}
+    "gender": "$user's_gender", // m, f
+    "login": "$username",
+    "show": "$original_show_title",
+    "showId": $showId,
+    "title": "$original_episode_title"
+  },
+  ...],
+  ...
+  }
+	 * </pre>
+	 * @return {@link String} with {@link JSONObject} of friends news if success<br>
+	 * 			<code>null</code> otherwise
+	 */
 	protected String getFriendsUpdates() {
 		if ( httpClient==null ) {
 			return null;
