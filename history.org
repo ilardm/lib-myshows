@@ -12,7 +12,7 @@
 	- use cache && queue in offline mode
 
 * TODO v0.2
-** DONE api b11 <2011-07-31>
+** DONE api b12 <2011-07-31>
 *** DONE full api support
 	- part 1
 ** TODO client

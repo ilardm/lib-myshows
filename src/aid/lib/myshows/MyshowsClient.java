@@ -271,6 +271,13 @@ public class MyshowsClient {
 		return ret;
 	}
 
+	/**
+	 * get {@link JSONArray} with ignored episodes<br>
+	 * structure is:
+	 * <pre>["$eisodeId","$episodeId",...]</pre>
+	 * @return {@link JSONArray} if success<br>
+	 * 			<code>null</code> otherwise
+	 */
 	public JSONArray getIgnoredEpisodes() {
 		JSONArray ret=null;
 
@@ -288,6 +295,14 @@ public class MyshowsClient {
 		return ret;
 	}
 
+	/**
+	 * add/remove episode to/from ignored list
+	 * @param _episode $episodeId
+	 * @param _add <code>true</code> if add<br>
+	 * 				<code>false</code> if remove
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	public boolean ignoreEpisode(int _episode,  boolean _add) {
 //		System.out.println( (_add ? "add" : "remove") + " ignored episode #"+_episode);
 
@@ -373,6 +388,13 @@ public class MyshowsClient {
 		return api.checkEpisode(_episode, _ratio);
 	}
 
+	/**
+	 * sets episode ratio
+	 * @param _episode $episodeId
+	 * @param _ratio ratio to set (between 0 and 5)
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	public boolean setEpisodeRatio(int _episode, int _ratio) {
 //		System.out.println("+++ setEpisodeRatio("+_episode+", "+_ratio+")");
 
@@ -392,51 +414,86 @@ public class MyshowsClient {
 		return api.unCheckEpisode(_episode);
 	}
 	
-	public boolean setShowStatus(int _show, String _status) {
-		System.out.println("client.setShowStatus: "+_show+":"+_status);
+	/**
+	 * sets show status (ie. watching, cancelled, ..)
+	 * @param _show $showId
+	 * @param _status chararter. one of following:
+	 * 			<ul>
+	 * 			<li> w -- watching
+	 * 			<li> c -- cancelled
+	 * 			<li> l -- later
+	 * 			<li> r -- remove
+	 * 			</ul>
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
+	public boolean setShowStatus(int _show, char _status) {
+//		System.out.println("client.setShowStatus: "+_show+":"+_status);
 		
 		MyshowsAPI.SHOW_STATUS st=MyshowsAPI.SHOW_STATUS.watching;
 		
-		if ( _status.equals("w") ) {
+		if ( _status=='w') {
 			st=MyshowsAPI.SHOW_STATUS.watching;
-		} else if ( _status.equals("c") ) {
+		} else if ( _status=='c' ) {
 			st=MyshowsAPI.SHOW_STATUS.cancelled;
-		} else if ( _status.equals("l") ) {
+		} else if ( _status=='l' ) {
 			st=MyshowsAPI.SHOW_STATUS.later;
-		} else if ( _status.equals("r") ) {
+		} else if ( _status=='r' ) {
 			st=MyshowsAPI.SHOW_STATUS.remove;
 		}
 		
 		return api.setShowStatus(_show, st);
 	}
 
+	/**
+	 * sets show ratio
+	 * @param _show $showId
+	 * @param _ratio ratio to set (between 0 and 5)
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	public boolean setShowRatio(int _show, int _ratio) {
 //		System.out.println("+++ setShowRatio("+_show+", "+_ratio+")");
 
 		return api.setShowRatio(_show, _ratio);
 	}
 
+	/**
+	 * add/remove show to/from favorites
+	 * @param _show $showId
+	 * @param _add <code>true</code> if add<br>
+	 * 				<code>false</code> if remove
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	public boolean favoriteShow(int _show,  boolean _add) {
 		System.out.println( (_add ? "add" : "remove") + " favorite show #"+_show);
 
 		return api.favoriteShow(_show, _add);
 	}
 
-	/*
+	/**
+	 * get friends updates<br>
+	 * structure is:
+	 * <pre>
 	 * {
-  "10.07.2011": [{
-    "action": "watch",
+  "$date": [{ // dd.MM.yyyy
+    "action": "$action", // watch, // TODO: other actions?
     "episode": "s03e14",
-    "episodeId": 687,
-    "episodes": 1,
-    "gender": "m",
-    "login": "ilardm",
-    "show": "Everybody Hates Chris",
-    "showId": 9,
-    "title": "Everybody Hates Easter"
-  }],
+    "episodeId": $episodeId,
+    "episodes": $number_of_episodes, // if >1 {episodeId=null, title=null, episode=":"}
+    "gender": "$user's_gender", // m, f
+    "login": "$username",
+    "show": "$original_show_title",
+    "showId": $showId,
+    "title": "$original_episode_title"
+  },
+  ...],
   ...
   }
+	 * </pre>
+	 * @return {@link JSONObject} with updates if success<br>
+	 * 			<code>null</code> otherwise
 	 */
 	public JSONObject getFriendsUpdates() {
 		JSONObject ret=null;
