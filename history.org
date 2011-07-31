@@ -12,8 +12,8 @@
 	- use cache && queue in offline mode
 
 * TODO v0.2
-** TODO api
-*** TODO full api support
+** DONE api b11 <2011-07-31>
+*** DONE full api support
 	- part 1
 ** TODO client
 *** TODO classes(?) 4 shows && episodes
