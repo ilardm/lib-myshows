@@ -64,7 +64,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final int VERSION_BUILD=11;
+	public static final int VERSION_BUILD=12;
 
 	/**
 	 * auto-generated full version number<br>

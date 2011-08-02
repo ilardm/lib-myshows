@@ -1,20 +1,22 @@
 * v0.3
-** TODO client
-*** TODO caching
-	- make show && episodes objects serializable
-	  serialize into separate files for each user
-	- (?) time to keep cache
-	- manual sync
-*** TODO [on|off]line mode
-	- actions queue
-	  [un]check episodes
-	- detect on startup (with manual control)
-	- use cache && queue in offline mode
+** client
+*** caching
+**** use SQLite
+**** (?) time to keep cache
+**** manual sync
+*** [on|off]line mode
+**** actions queue
+	 [un]check episodes
+**** detect on startup (with manual control)
+**** use cache && queue in offline mode
 
-* TODO v0.2
-** DONE api b12 <2011-07-31>
-*** DONE full api support
-	- part 1
+* INPROGRESS v0.2
+** INPROGRESS 
+*** INPROGRESS full api support
+**** DONE part 1 api b12 <201-17-31>
+	 before search
+**** TODO part 2
+	 search API
 ** TODO client
 *** TODO classes(?) 4 shows && episodes
 	- use hashmaps(?) instead of JSON[Array|Object]s
