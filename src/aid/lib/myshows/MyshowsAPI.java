@@ -111,6 +111,14 @@ public class MyshowsAPI {
 
 	final protected String URL_API_NEWS="http://api.myshows.ru/profile/news/";
 	
+	/* part 2 */
+//	final protected String URL_API_SEARCH="http://api.myshows.ru/shows/search/?q=%1$s";				// search word
+//	final protected String URL_API_SEARCH_FILE="http://api.myshows.ru/shows/search/file/?q=%1$s";	// filename
+//	final protected String URL_API_SHOW_INFO="http://api.myshows.ru/shows/%1$d";					// showId
+//	final protected String URL_API_GERNES="http://api.myshows.ru/genres/";
+//	final protected String URL_API_TOP="http://api.myshows.ru/shows/top/all/";
+//	final protected String URL_API_PROFILE="http://api.myshows.ru/profile/%1$s";					// username
+
 	/**
 	 * registered username
 	 */
