@@ -13,7 +13,7 @@
 * INPROGRESS v0.2
 ** INPROGRESS 
 *** INPROGRESS full api support
-**** DONE part 1 api b12 <201-17-31>
+**** DONE part 1 api b12 <2011-17-31>
 	 before search
 **** TODO part 2
 	 search API

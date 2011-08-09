@@ -43,6 +43,7 @@ import org.json.JSONObject;
  */
 public class MyshowsClient {
 	protected MyshowsAPI api=null;
+	protected boolean loggedIn=false;
 	
 	/**
 	 * dummy constructor<br>
@@ -55,7 +56,17 @@ public class MyshowsClient {
 		
 		// TODO: check if offline
 	}
-	
+
+	/**
+	 * checks if logged in<br>
+	 * flag is set to true on successful login
+	 * @return <code>true</code> if logged in<br>
+	 * 			<code>false</code> otherwise
+	 */
+	public boolean isLoggedIn() {
+		return loggedIn;
+	}
+
 	/**
 	 * login into username's account<br>
 	 * calls <code>MyshowsAPI.login()</code>
@@ -66,8 +77,13 @@ public class MyshowsClient {
 	 */
 	public boolean login(String _username, String _password) {
 //		System.out.println("+++ login(String "+_username+", String "+_password+")");
-		
-		return api.login(_username, _password);
+
+		if ( api.login(_username, _password) )
+		{
+			loggedIn=true;
+		}
+
+		return loggedIn;
 	}
 	
 	/**
@@ -78,9 +94,18 @@ public class MyshowsClient {
 	public boolean logout() {
 		// TODO: implement logout @ API && client
 //		System.out.println("+++ logout()");
-		return api.logout();
+		if ( loggedIn ) {
+			boolean result=api.logout();
+
+			if ( result ) {
+				loggedIn=false;
+				return result;
+			}
+		}
+
+		return false; // TODO: check if correct
 	}
-	
+
 	/**
 	 * get all shows (watching, canceled, etc) of user<br>
 	 * calls <code>MyshowsAPI.getShows()</code><br>
@@ -105,7 +130,11 @@ public class MyshowsClient {
 	 */
 	public JSONArray getShows() {
 //		System.out.println("+++ getShows()");
-		
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject shows=null;
 		JSONArray ret=null;
 		String result=api.getShows();
@@ -162,11 +191,15 @@ public class MyshowsClient {
 	 */
 	public JSONArray getUnwatchedEpisodes(int _show) {
 //		System.out.println("+++ getUnwatchedEpisodes("+_show+")");
-		
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject unwatched=null;
 		JSONArray ret=null;
 		String result=api.getUnwatchedEpisodes();
-		
+
 		if ( result!=null ) {
 			try {
 				// put episodes in jsonobject{ "showid":{"info"} }
@@ -193,7 +226,7 @@ public class MyshowsClient {
 						continue;
 					}
 				}
-				
+
 			} catch (Exception e) {
 				System.err.println("--- oops: "+e.getMessage());
 				e.printStackTrace();
@@ -201,7 +234,7 @@ public class MyshowsClient {
 		} else {
 			System.err.println("--- null from API call");
 		}
-		
+
 		return ret;
 	}
 	
@@ -228,7 +261,11 @@ public class MyshowsClient {
 	 */
 	public JSONArray getNextEpisodes(int _show) {
 //		System.out.println("+++ getNextEpisodes("+_show+")");
-		
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject next=null;
 		JSONArray ret=null;
 		String result=api.getNextEpisodes();
@@ -279,6 +316,11 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONArray getIgnoredEpisodes() {
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONArray ret=null;
 
 		String result=api.getIgnoredEpisodes();
@@ -306,6 +348,10 @@ public class MyshowsClient {
 	public boolean ignoreEpisode(int _episode,  boolean _add) {
 //		System.out.println( (_add ? "add" : "remove") + " ignored episode #"+_episode);
 
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		return api.ignoreEpisode(_episode, _add);
 	}
 	
@@ -326,7 +372,11 @@ public class MyshowsClient {
 	 */
 	public JSONArray getSeenEpisodes(int _show) {
 //		System.out.println("+++ getSeenEpisodes(int "+_show+")");
-		
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject seen=null;
 		JSONArray ret=null;
 		String result=api.getSeenEpisodes(_show);
@@ -369,7 +419,11 @@ public class MyshowsClient {
 	 */
 	public boolean checkEpisode(int _episode) {
 //		System.out.println("+++ checkEpisode(int "+_episode+")");
-		
+
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		return api.checkEpisode(_episode);
 	}
 	
@@ -384,7 +438,11 @@ public class MyshowsClient {
 	 */
 	public boolean checkEpisode(int _episode, int _ratio) {
 //		System.out.println("+++ checkEpisode(int "+_episode+", int "+_ratio+")");
-		
+
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		return api.checkEpisode(_episode, _ratio);
 	}
 
@@ -398,6 +456,10 @@ public class MyshowsClient {
 	public boolean setEpisodeRatio(int _episode, int _ratio) {
 //		System.out.println("+++ setEpisodeRatio("+_episode+", "+_ratio+")");
 
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		return api.setEpisodeRatio(_episode, _ratio);
 	}
 	
@@ -410,7 +472,11 @@ public class MyshowsClient {
 	 */
 	public boolean unCheckEpisode(int _episode) {
 //		System.out.println("+++ unCheckEpisode(int "+_episode+")");
-		
+
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		return api.unCheckEpisode(_episode);
 	}
 	
@@ -429,7 +495,11 @@ public class MyshowsClient {
 	 */
 	public boolean setShowStatus(int _show, char _status) {
 //		System.out.println("client.setShowStatus: "+_show+":"+_status);
-		
+
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		MyshowsAPI.SHOW_STATUS st=MyshowsAPI.SHOW_STATUS.watching;
 		
 		if ( _status=='w') {
@@ -455,6 +525,10 @@ public class MyshowsClient {
 	public boolean setShowRatio(int _show, int _ratio) {
 //		System.out.println("+++ setShowRatio("+_show+", "+_ratio+")");
 
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		return api.setShowRatio(_show, _ratio);
 	}
 
@@ -467,7 +541,11 @@ public class MyshowsClient {
 	 * 			<code>false</code> otherwise
 	 */
 	public boolean favoriteShow(int _show,  boolean _add) {
-		System.out.println( (_add ? "add" : "remove") + " favorite show #"+_show);
+//		System.out.println( (_add ? "add" : "remove") + " favorite show #"+_show);
+
+		if ( !loggedIn ) {
+			return false;
+		}
 
 		return api.favoriteShow(_show, _add);
 	}
@@ -496,6 +574,11 @@ public class MyshowsClient {
 	 * 			<code>null</code> otherwise
 	 */
 	public JSONObject getFriendsUpdates() {
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject ret=null;
 
 		String result=api.getFriendsUpdates();
