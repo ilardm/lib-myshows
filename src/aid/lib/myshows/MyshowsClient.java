@@ -43,6 +43,7 @@ import org.json.JSONObject;
  */
 public class MyshowsClient {
 	protected MyshowsAPI api=null;
+	protected boolean loggedIn=false;
 	
 	/**
 	 * dummy constructor<br>
@@ -55,7 +56,17 @@ public class MyshowsClient {
 		
 		// TODO: check if offline
 	}
-	
+
+	/**
+	 * checks if logged in<br>
+	 * flag is set to true on successful login
+	 * @return <code>true</code> if logged in<br>
+	 * 			<code>false</code> otherwise
+	 */
+	public boolean isLoggedIn() {
+		return loggedIn;
+	}
+
 	/**
 	 * login into username's account<br>
 	 * calls <code>MyshowsAPI.login()</code>
@@ -66,8 +77,13 @@ public class MyshowsClient {
 	 */
 	public boolean login(String _username, String _password) {
 //		System.out.println("+++ login(String "+_username+", String "+_password+")");
-		
-		return api.login(_username, _password);
+
+		if ( api.login(_username, _password) )
+		{
+			loggedIn=true;
+		}
+
+		return loggedIn;
 	}
 	
 	/**
@@ -78,9 +94,18 @@ public class MyshowsClient {
 	public boolean logout() {
 		// TODO: implement logout @ API && client
 //		System.out.println("+++ logout()");
-		return api.logout();
+		if ( loggedIn ) {
+			boolean result=api.logout();
+
+			if ( result ) {
+				loggedIn=false;
+				return result;
+			}
+		}
+
+		return false; // TODO: check if correct
 	}
-	
+
 	/**
 	 * get all shows (watching, canceled, etc) of user<br>
 	 * calls <code>MyshowsAPI.getShows()</code><br>
@@ -105,7 +130,11 @@ public class MyshowsClient {
 	 */
 	public JSONArray getShows() {
 //		System.out.println("+++ getShows()");
-		
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject shows=null;
 		JSONArray ret=null;
 		String result=api.getShows();
@@ -162,11 +191,15 @@ public class MyshowsClient {
 	 */
 	public JSONArray getUnwatchedEpisodes(int _show) {
 //		System.out.println("+++ getUnwatchedEpisodes("+_show+")");
-		
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject unwatched=null;
 		JSONArray ret=null;
 		String result=api.getUnwatchedEpisodes();
-		
+
 		if ( result!=null ) {
 			try {
 				// put episodes in jsonobject{ "showid":{"info"} }
@@ -193,7 +226,7 @@ public class MyshowsClient {
 						continue;
 					}
 				}
-				
+
 			} catch (Exception e) {
 				System.err.println("--- oops: "+e.getMessage());
 				e.printStackTrace();
@@ -201,7 +234,7 @@ public class MyshowsClient {
 		} else {
 			System.err.println("--- null from API call");
 		}
-		
+
 		return ret;
 	}
 	
@@ -228,7 +261,11 @@ public class MyshowsClient {
 	 */
 	public JSONArray getNextEpisodes(int _show) {
 //		System.out.println("+++ getNextEpisodes("+_show+")");
-		
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject next=null;
 		JSONArray ret=null;
 		String result=api.getNextEpisodes();
@@ -271,7 +308,19 @@ public class MyshowsClient {
 		return ret;
 	}
 
+	/**
+	 * get {@link JSONArray} with ignored episodes<br>
+	 * structure is:
+	 * <pre>["$eisodeId","$episodeId",...]</pre>
+	 * @return {@link JSONArray} if success<br>
+	 * 			<code>null</code> otherwise
+	 */
 	public JSONArray getIgnoredEpisodes() {
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONArray ret=null;
 
 		String result=api.getIgnoredEpisodes();
@@ -288,8 +337,20 @@ public class MyshowsClient {
 		return ret;
 	}
 
+	/**
+	 * add/remove episode to/from ignored list
+	 * @param _episode $episodeId
+	 * @param _add <code>true</code> if add<br>
+	 * 				<code>false</code> if remove
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	public boolean ignoreEpisode(int _episode,  boolean _add) {
 //		System.out.println( (_add ? "add" : "remove") + " ignored episode #"+_episode);
+
+		if ( !loggedIn ) {
+			return false;
+		}
 
 		return api.ignoreEpisode(_episode, _add);
 	}
@@ -311,7 +372,11 @@ public class MyshowsClient {
 	 */
 	public JSONArray getSeenEpisodes(int _show) {
 //		System.out.println("+++ getSeenEpisodes(int "+_show+")");
-		
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject seen=null;
 		JSONArray ret=null;
 		String result=api.getSeenEpisodes(_show);
@@ -354,7 +419,11 @@ public class MyshowsClient {
 	 */
 	public boolean checkEpisode(int _episode) {
 //		System.out.println("+++ checkEpisode(int "+_episode+")");
-		
+
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		return api.checkEpisode(_episode);
 	}
 	
@@ -369,12 +438,27 @@ public class MyshowsClient {
 	 */
 	public boolean checkEpisode(int _episode, int _ratio) {
 //		System.out.println("+++ checkEpisode(int "+_episode+", int "+_ratio+")");
-		
+
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		return api.checkEpisode(_episode, _ratio);
 	}
 
+	/**
+	 * sets episode ratio
+	 * @param _episode $episodeId
+	 * @param _ratio ratio to set (between 0 and 5)
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	public boolean setEpisodeRatio(int _episode, int _ratio) {
 //		System.out.println("+++ setEpisodeRatio("+_episode+", "+_ratio+")");
+
+		if ( !loggedIn ) {
+			return false;
+		}
 
 		return api.setEpisodeRatio(_episode, _ratio);
 	}
@@ -388,57 +472,113 @@ public class MyshowsClient {
 	 */
 	public boolean unCheckEpisode(int _episode) {
 //		System.out.println("+++ unCheckEpisode(int "+_episode+")");
-		
+
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		return api.unCheckEpisode(_episode);
 	}
 	
-	public boolean setShowStatus(int _show, String _status) {
-		System.out.println("client.setShowStatus: "+_show+":"+_status);
-		
+	/**
+	 * sets show status (ie. watching, cancelled, ..)
+	 * @param _show $showId
+	 * @param _status chararter. one of following:
+	 * 			<ul>
+	 * 			<li> w -- watching
+	 * 			<li> c -- cancelled
+	 * 			<li> l -- later
+	 * 			<li> r -- remove
+	 * 			</ul>
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
+	public boolean setShowStatus(int _show, char _status) {
+//		System.out.println("client.setShowStatus: "+_show+":"+_status);
+
+		if ( !loggedIn ) {
+			return false;
+		}
+
 		MyshowsAPI.SHOW_STATUS st=MyshowsAPI.SHOW_STATUS.watching;
 		
-		if ( _status.equals("w") ) {
+		if ( _status=='w') {
 			st=MyshowsAPI.SHOW_STATUS.watching;
-		} else if ( _status.equals("c") ) {
+		} else if ( _status=='c' ) {
 			st=MyshowsAPI.SHOW_STATUS.cancelled;
-		} else if ( _status.equals("l") ) {
+		} else if ( _status=='l' ) {
 			st=MyshowsAPI.SHOW_STATUS.later;
-		} else if ( _status.equals("r") ) {
+		} else if ( _status=='r' ) {
 			st=MyshowsAPI.SHOW_STATUS.remove;
 		}
 		
 		return api.setShowStatus(_show, st);
 	}
 
+	/**
+	 * sets show ratio
+	 * @param _show $showId
+	 * @param _ratio ratio to set (between 0 and 5)
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	public boolean setShowRatio(int _show, int _ratio) {
 //		System.out.println("+++ setShowRatio("+_show+", "+_ratio+")");
+
+		if ( !loggedIn ) {
+			return false;
+		}
 
 		return api.setShowRatio(_show, _ratio);
 	}
 
+	/**
+	 * add/remove show to/from favorites
+	 * @param _show $showId
+	 * @param _add <code>true</code> if add<br>
+	 * 				<code>false</code> if remove
+	 * @return <code>true</code> if success<br>
+	 * 			<code>false</code> otherwise
+	 */
 	public boolean favoriteShow(int _show,  boolean _add) {
-		System.out.println( (_add ? "add" : "remove") + " favorite show #"+_show);
+//		System.out.println( (_add ? "add" : "remove") + " favorite show #"+_show);
+
+		if ( !loggedIn ) {
+			return false;
+		}
 
 		return api.favoriteShow(_show, _add);
 	}
 
-	/*
+	/**
+	 * get friends updates<br>
+	 * structure is:
+	 * <pre>
 	 * {
-  "10.07.2011": [{
-    "action": "watch",
+  "$date": [{ // dd.MM.yyyy
+    "action": "$action", // watch, // TODO: other actions?
     "episode": "s03e14",
-    "episodeId": 687,
-    "episodes": 1,
-    "gender": "m",
-    "login": "ilardm",
-    "show": "Everybody Hates Chris",
-    "showId": 9,
-    "title": "Everybody Hates Easter"
-  }],
+    "episodeId": $episodeId,
+    "episodes": $number_of_episodes, // if >1 {episodeId=null, title=null, episode=":"}
+    "gender": "$user's_gender", // m, f
+    "login": "$username",
+    "show": "$original_show_title",
+    "showId": $showId,
+    "title": "$original_episode_title"
+  },
+  ...],
   ...
   }
+	 * </pre>
+	 * @return {@link JSONObject} with updates if success<br>
+	 * 			<code>null</code> otherwise
 	 */
 	public JSONObject getFriendsUpdates() {
+
+		if ( !loggedIn ) {
+			return null;
+		}
+
 		JSONObject ret=null;
 
 		String result=api.getFriendsUpdates();
