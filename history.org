@@ -15,8 +15,8 @@
 *** INPROGRESS full api support
 **** DONE part 1 api b12 <2011-17-31>
 	 before search
-**** TODO part 2
-	 search API
+**** INPROGRESS part 2
+	 search API, ...
 ** TODO client
 *** TODO classes(?) 4 shows && episodes
 	- use hashmaps(?) instead of JSON[Array|Object]s
