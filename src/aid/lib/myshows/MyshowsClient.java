@@ -596,4 +596,55 @@ public class MyshowsClient {
 
 		return ret;
 	}
+
+	// TODO: docs
+	public JSONObject search(String _keyword) {
+
+		if ( !loggedIn || _keyword==null || _keyword.isEmpty() ) {
+			return null;
+		}
+
+		JSONObject ret=null;
+
+		String result=api.search(_keyword);
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONObject(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- oops: NULL from API call");
+		}
+
+		return ret;
+	}
+
+	// TODO: docs
+	public JSONObject searchByFile(String _filename) {
+
+		if ( !loggedIn || _filename==null || _filename.isEmpty() ) {
+			return null;
+		}
+
+		JSONObject ret=null;
+
+		String result=api.searchByFile(_filename);
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONObject(result);
+				ret=ret.getJSONObject("show");	// return show object only
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- oops: NULL from API call");
+		}
+
+		return ret;
+	}
 }

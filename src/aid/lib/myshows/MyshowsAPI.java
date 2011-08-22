@@ -112,8 +112,8 @@ public class MyshowsAPI {
 	final protected String URL_API_NEWS="http://api.myshows.ru/profile/news/";
 	
 	/* part 2 */
-//	final protected String URL_API_SEARCH="http://api.myshows.ru/shows/search/?q=%1$s";				// search word
-//	final protected String URL_API_SEARCH_FILE="http://api.myshows.ru/shows/search/file/?q=%1$s";	// filename
+	final protected String URL_API_SEARCH="http://api.myshows.ru/shows/search/?q=%1$s";				// search word
+	final protected String URL_API_SEARCH_FILE="http://api.myshows.ru/shows/search/file/?q=%1$s";	// filename
 //	final protected String URL_API_SHOW_INFO="http://api.myshows.ru/shows/%1$d";					// showId
 //	final protected String URL_API_GERNES="http://api.myshows.ru/genres/";
 //	final protected String URL_API_TOP="http://api.myshows.ru/shows/top/all/";
@@ -602,6 +602,31 @@ public class MyshowsAPI {
 		}
 
 		HttpGet request=new HttpGet(URL_API_NEWS);
+		return executeRequest(request);
+	}
+
+	// TODO: docs
+	protected String search(String _keyword) {
+
+		if ( httpClient==null || _keyword==null ) {
+			return null;
+		}
+
+		String requestUrl=String.format( URL_API_SEARCH, _keyword);
+
+		HttpGet request=new HttpGet(requestUrl);
+		return executeRequest(request);
+	}
+
+	// TODO: docs
+	protected String searchByFile(String _filename) {
+		if ( httpClient==null || _filename==null ) {
+			return null;
+		}
+
+		String requestUrl=String.format( URL_API_SEARCH_FILE, _filename);
+
+		HttpGet request=new HttpGet(requestUrl);
 		return executeRequest(request);
 	}
 }
