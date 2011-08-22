@@ -63,7 +63,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final int VERSION_BUILD=13;
+	public static final int VERSION_BUILD=14;
 
 	/**
 	 * auto-generated full version number<br>
@@ -220,7 +220,14 @@ public class MyshowsAPI {
 	 * </ul>
 	 */
 	final protected String URL_API_SEARCH_FILE="http://api.myshows.ru/shows/search/file/?q=%1$s";
-//	final protected String URL_API_SHOW_INFO="http://api.myshows.ru/shows/%1$d";					// showId
+	/**
+	 * get show info API URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>show ID ({@link Integer})</li>
+	 * </ul>
+	 */
+	final protected String URL_API_SHOW_INFO="http://api.myshows.ru/shows/%1$d";
 //	final protected String URL_API_GERNES="http://api.myshows.ru/genres/";
 //	final protected String URL_API_TOP="http://api.myshows.ru/shows/top/all/";
 //	final protected String URL_API_PROFILE="http://api.myshows.ru/profile/%1$s";					// username
@@ -731,6 +738,19 @@ public class MyshowsAPI {
 		}
 
 		String requestUrl=String.format( URL_API_SEARCH_FILE, _filename);
+
+		HttpGet request=new HttpGet(requestUrl);
+		return executeRequest(request);
+	}
+
+	// TODO: docs
+	protected String getShowInfo(int _show) {
+
+		if ( httpClient==null || _show<0 ) {
+			return null;
+		}
+
+		String requestUrl=String.format( URL_API_SHOW_INFO, _show);
 
 		HttpGet request=new HttpGet(requestUrl);
 		return executeRequest(request);
