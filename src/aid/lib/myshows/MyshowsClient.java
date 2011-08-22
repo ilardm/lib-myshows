@@ -33,6 +33,7 @@ package aid.lib.myshows;
 import java.util.Iterator;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -662,6 +663,45 @@ public class MyshowsClient {
 		if ( result!=null ) {
 			try {
 				ret=new JSONObject(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- oops: NULL from API call");
+		}
+
+		return ret;
+	}
+
+	/**
+	 * // TODO docs
+	 * @param _gerne if <0 { return all genres list }
+	 * @return
+	 */
+	public JSONObject getGenres(int _genre) {
+		if ( !loggedIn ) {
+			return null;
+		}
+
+		JSONObject ret=null;
+
+		String result=api.getGenres();
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONObject(result);
+
+				if ( _genre>0 ) {
+					try {
+						// TODO: check if can assign ret without additional variable
+						JSONObject genre=ret.getJSONObject(""+_genre);
+						ret=genre;
+					} catch (JSONException e) {
+						// pass
+					}
+				}
+
 			} catch (Exception e) {
 				System.err.println("--- oops: "+e.getMessage());
 				e.printStackTrace();
