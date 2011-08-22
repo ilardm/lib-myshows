@@ -712,4 +712,28 @@ public class MyshowsClient {
 
 		return ret;
 	}
+
+	// TODO: docs
+	public JSONObject getUserProfile(String _username) {
+		if ( !loggedIn || _username==null || _username.isEmpty() ) {
+			return null;
+		}
+
+		JSONObject ret=null;
+
+		String result=api.getUserProfile(_username);
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONObject(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- oops: NULL from API call");
+		}
+
+		return ret;
+	}
 }
