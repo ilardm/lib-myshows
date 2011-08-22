@@ -42,7 +42,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONString;
 
 /** 
  * MyShows API
@@ -64,7 +63,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final int VERSION_BUILD=12;
+	public static final int VERSION_BUILD=13;
 
 	/**
 	 * auto-generated full version number<br>
@@ -74,46 +73,153 @@ public class MyshowsAPI {
 	 */
 	public static final String VERSION_FULL=VERSION+"."+VERSION_BUILD;
 
+	/**
+	 * login URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>username ({@link String})</li>
+	 * <li>MD5 hash of password</li>
+	 * </ul>
+	 */
 	final protected String URL_API_LOGIN="http://api.myshows.ru/profile/login?login=%1$s&password=%2$s";
 	final protected String URL_API_SHOWS="http://api.myshows.ru/profile/shows/";
 
+	/**
+	 * seen episodes list API URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>show ID ({@link Integer})</li>
+	 * </ul>
+	 */
 	final protected String URL_API_EPISODES_SEEN="http://api.myshows.ru/profile/shows/%1$d/";
 	final protected String URL_API_EPISODES_UNWATCHED="http://api.myshows.ru/profile/episodes/unwatched/";
 	final protected String URL_API_EPISODES_NEXT="http://api.myshows.ru/profile/episodes/next/";
 
 	/* unused API ? */
 	final protected String URL_API_EPISODES_IGNORED="http://api.myshows.ru/profile/episodes/ignored/list/";
+	/**
+	 * add to ignored episodes list API URL<br>
+	 * <i>not visible in WEB interface</i><br>
+	 * placeholders:
+	 * <ul>
+	 * <li>episode ID ({@link Integer})</li>
+	 * </ul>
+	 */
 	final protected String URL_API_EPISODES_IGNORED_ADD="http://api.myshows.ru/profile/episodes/ignored/add/%1$d";
+	/**
+	 * remove from ignored episodes list<br>
+	 * <i>not visible in WEB interface</i><br>
+	 * placeholders:
+	 * <ul>
+	 * <li>episode ID ({@link Integer})</li>
+	 * </ul>
+	 */
 	final protected String URL_API_EPISODES_IGNORED_REMOVE="http://api.myshows.ru/profile/episodes/ignored/remove/%1$d";
 
+	/**
+	 * mark episode as watched API URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>episode ID ({@link Integer})</li>
+	 * </ul>
+	 */
 	final protected String URL_API_EPISODE_CHECK="http://api.myshows.ru/profile/episodes/check/%1$d";
+	/**
+	 * mark episode as watched with ratio API URL<br>
+	 * <i>not visible in WEB interface</i><br>
+	 * placeholders:
+	 * <ul>
+	 * <li>episode ID ({@link Integer})</li>
+	 * <li>ratio ({@link Integer}) between 1 and 5</li>
+	 * </ul>
+	 */
 	final protected String URL_API_EPISODE_CHECK_RATIO="http://api.myshows.ru/profile/episodes/check/%1$d?rating=%2$d";
+	/**
+	 * mark episode as unwatched API URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>episode ID ({@link Integer})</li>
+	 * </ul>
+	 */
 	final protected String URL_API_EPISODE_UNCHECK="http://api.myshows.ru/profile/episodes/uncheck/%1$d";
-	final protected String URL_API_EPISODE_RATIO="http://api.myshows.ru/profile/episodes/rate/%1$d/%2$d"; // ratio/episode
+	/**
+	 * set episode ratio API URL<br>
+	 * <i>note: you can only set ratio, not unset</i><br>
+	 * placeholders:
+	 * <ul>
+	 * <li>ratio ({@link Integer} between 1 and 5</li>
+	 * <li>episode ID ({@link Integer})</li>
+	 * </ul>
+	 */
+	final protected String URL_API_EPISODE_RATIO="http://api.myshows.ru/profile/episodes/rate/%1$d/%2$d";
 
 	/**
 	 * show status. one of
 	 * <ul>
-	 * <li>watching
-	 * <li>later
-	 * <li>cancelled
-	 * <li>remove
+	 * <li>watching</li>
+	 * <li>later</li>
+	 * <li>cancelled</li>
+	 * <li>remove</li>
 	 * </ul>
 	 * @see <a href="http://api.myshows.ru/">http://api.myshows.ru/</a>
 	 */
 	public enum SHOW_STATUS { watching, later, cancelled, remove };
+	/**
+	 * control show status (visible in user profile) API URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>show ID ({@link Integer})</li>
+	 * <li>episode status ({@link String}) one of {@link SHOW_STATUS}.toString()</li>
+	 * </ul>
+	 */
 	final protected String URL_API_SHOW_STATUS="http://api.myshows.ru/profile/shows/%1$d/%2$s";
-	final protected String URL_API_SHOW_RATIO="http://api.myshows.ru/profile/shows/%1$d/rate/%2$d"; // show/ratio
+	/**
+	 * control show ratio (visible in user profile) API URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>show ID ({@link Integer})</li>
+	 * <li>ratio ({@link Integer}) between 1 and 5</li>
+	 * </ul>
+	 */
+	final protected String URL_API_SHOW_RATIO="http://api.myshows.ru/profile/shows/%1$d/rate/%2$d";
 
-	/* unuseed API*/
+	/* unuseed API ? */
+	/**
+	 * add show to favorite shows list API URL<br>
+	 * <i>not visible anywhere ?</i><br>
+	 * placeholders:
+	 * <ul>
+	 * <li>show ID ({@link Integer})</li>
+	 * </ul>
+	 */
 	final protected String URL_API_SHOW_FAVORITE_ADD="http://api.myshows.ru/profile/episodes/favorites/add/%1$d";
+	/**
+	 * remove show from favorite list API URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>show ID ({@link Integer})</li>
+	 * </ul>
+	 */
 	final protected String URL_API_SHOW_FAVORITE_REMOVE="http://api.myshows.ru/profile/episodes/favorites/remove/%1$d";
 
 	final protected String URL_API_NEWS="http://api.myshows.ru/profile/news/";
-	
-	/* part 2 */
-	final protected String URL_API_SEARCH="http://api.myshows.ru/shows/search/?q=%1$s";				// search word
-	final protected String URL_API_SEARCH_FILE="http://api.myshows.ru/shows/search/file/?q=%1$s";	// filename
+
+	/**
+	 * search by keyword URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>keyword ({@link String})</li>
+	 * </ul>
+	 */
+	final protected String URL_API_SEARCH="http://api.myshows.ru/shows/search/?q=%1$s";
+	/**
+	 * search by filename URL<br>
+	 * placeholders:
+	 * <ul>
+	 * <li>filename ({@link String})</li>
+	 * </ul>
+	 */
+	final protected String URL_API_SEARCH_FILE="http://api.myshows.ru/shows/search/file/?q=%1$s";
 //	final protected String URL_API_SHOW_INFO="http://api.myshows.ru/shows/%1$d";					// showId
 //	final protected String URL_API_GERNES="http://api.myshows.ru/genres/";
 //	final protected String URL_API_TOP="http://api.myshows.ru/shows/top/all/";
