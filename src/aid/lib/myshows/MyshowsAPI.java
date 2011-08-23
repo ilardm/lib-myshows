@@ -63,7 +63,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final int VERSION_BUILD=16;
+	public static final int VERSION_BUILD=17;
 
 	/**
 	 * auto-generated full version number<br>
@@ -229,7 +229,7 @@ public class MyshowsAPI {
 	 */
 	final protected String URL_API_SHOW_INFO="http://api.myshows.ru/shows/%1$d";
 	final protected String URL_API_GENRES="http://api.myshows.ru/genres/";
-//	final protected String URL_API_TOP="http://api.myshows.ru/shows/top/all/";
+	final protected String URL_API_TOP="http://api.myshows.ru/shows/top/all/";
 	/**
 	 * get user profile API URL<br>
 	 * placeholders:
@@ -783,6 +783,16 @@ public class MyshowsAPI {
 		String requestUrl=String.format( URL_API_PROFILE, _username);
 
 		HttpGet request=new HttpGet(requestUrl);
+		return executeRequest(request);
+	}
+
+	// TODO: docs
+	protected String getAllShows() {
+		if ( httpClient==null ) {
+			return null;
+		}
+
+		HttpGet request=new HttpGet(URL_API_TOP);
 		return executeRequest(request);
 	}
 }

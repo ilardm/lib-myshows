@@ -736,4 +736,28 @@ public class MyshowsClient {
 
 		return ret;
 	}
+
+	// TODO: docs
+	public JSONArray getAllShows() {
+		if ( !loggedIn ) {
+			return null;
+		}
+
+		JSONArray ret=null;
+
+		String result=api.getAllShows();
+
+		if ( result!=null ) {
+			try {
+				ret=new JSONArray(result);
+			} catch (Exception e) {
+				System.err.println("--- oops: "+e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			System.err.println("--- oops: NULL from API call");
+		}
+
+		return ret;
+	}
 }
