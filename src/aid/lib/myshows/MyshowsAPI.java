@@ -33,6 +33,7 @@ package aid.lib.myshows;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 
 import org.apache.http.HttpEntity;
@@ -63,7 +64,7 @@ public class MyshowsAPI {
 	 *
 	 * <b>do not edit this!</b>
 	 */
-	public static final int VERSION_BUILD=17;
+	public static final int VERSION_BUILD=18;
 
 	/**
 	 * auto-generated full version number<br>
@@ -732,10 +733,19 @@ public class MyshowsAPI {
 			return null;
 		}
 
-		String requestUrl=String.format( URL_API_SEARCH, _keyword);
+		try {
+			String requestUrl=String.format( URL_API_SEARCH,
+					URLEncoder.encode(_keyword, "UTF-8")
+					);
 
-		HttpGet request=new HttpGet(requestUrl);
-		return executeRequest(request);
+			HttpGet request=new HttpGet( requestUrl );
+			return executeRequest(request);
+		} catch (Exception e) {
+			System.err.println("--- oops: "+e.getMessage());
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	// TODO: docs
@@ -744,10 +754,19 @@ public class MyshowsAPI {
 			return null;
 		}
 
-		String requestUrl=String.format( URL_API_SEARCH_FILE, _filename);
+		try {
+			String requestUrl=String.format( URL_API_SEARCH_FILE,
+					URLEncoder.encode(_filename, "UTF-8")
+					);
 
-		HttpGet request=new HttpGet(requestUrl);
-		return executeRequest(request);
+			HttpGet request=new HttpGet(requestUrl);
+			return executeRequest(request);
+		} catch (Exception e) {
+			System.err.println("--- oops: "+e.getMessage());
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	// TODO: docs
